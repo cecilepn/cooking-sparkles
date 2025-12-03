@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: cooking-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: cooking
+
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: ../../docker/backend.Dockerfile
+    container_name: cooking-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./apps/backend/.env
+    volumes:
+      - ./apps/backend:/app 
+      - /app/node_modules     
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: ../../docker/frontend.Dockerfile
+    container_name: cooking-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./apps/frontend:/app   
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
