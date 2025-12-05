@@ -1,27 +1,13 @@
-function Header() {
+import { Link } from 'react-router-dom'
+
+export default function Header() {
   return (
-    <>
-      <nav>
-        <ul className="flex gap-2">
-          <li>
-            <a href="">Home</a>
-          </li>
-          <li>
-            <a href="">My Receipts</a>
-          </li>
-          <li>
-            <a href="">My Profile</a>
-          </li>
-          <li>
-            <a href="">Register</a>
-          </li>
-          <li>
-            <a href="">Login</a>
-          </li>
-        </ul>
+    <header className="p-4 bg-gray-100">
+      <nav className="flex gap-4">
+        <Link to="/">Home</Link>
+        <Link to="/recipes">Recipes</Link>
+        <Link to="/login">Login</Link>
       </nav>
-    </>
+    </header>
   )
 }
-
-export default Header

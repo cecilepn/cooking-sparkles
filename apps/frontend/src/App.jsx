@@ -1,3 +1,4 @@
+import { Outlet } from 'react-router-dom'
 import Footer from './components/layout/Footer'
 import Header from './components/layout/Header'
 
@@ -5,7 +6,9 @@ function App() {
   return (
     <>
       <Header />
-      <div className="text-red-500">Tailwind TEST</div>
+      <main className="container mx-auto py-6">
+        <Outlet />
+      </main>
       <Footer />
     </>
   )

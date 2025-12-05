@@ -1,11 +1,7 @@
-function Footer() {
+export default function Footer() {
   return (
     <>
-      <footer>
-        <p>Cécile, 2025</p>
-      </footer>
+      <footer>isFooter</footer>
     </>
   )
 }
-
-export default Footer
