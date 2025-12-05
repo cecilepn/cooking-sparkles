@@ -1,10 +1,10 @@
-import RecipeCard from '../components/recipes/RecipeCard'
+import RecipesList from '../components/recipes/RecipesList'
 
 export default function Home() {
   return (
     <>
       <section className="min-h-screen flex flex-col">
-        <RecipeCard />
+        <RecipesList />
       </section>
     </>
   )

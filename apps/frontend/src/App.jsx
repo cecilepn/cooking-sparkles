@@ -6,7 +6,7 @@ function App() {
   return (
     <>
       <Header />
-      <main className="container mx-auto py-6">
+      <main>
         <Outlet />
       </main>
       <Footer />
