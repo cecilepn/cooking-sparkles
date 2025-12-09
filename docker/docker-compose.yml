@@ -1,7 +1,7 @@
 services:
   mongodb:
     image: mongo
-    container_name: mern-mongo
+    container_name: cooking-sparkles-mongo
     ports:
       - "27017:27017"
     volumes:
@@ -10,11 +10,11 @@ services:
     build:
       context: ../apps/backend
       dockerfile: ../../docker/backend.Dockerfile
-    container_name: mern-backend
+    container_name: cooking-sparkles-backend
     ports:
       - "5001:5000"
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/mern
+      - MONGO_URI=mongodb://mongodb:27017/cooking-sparkles
     depends_on:
       - mongodb
 
@@ -22,7 +22,7 @@ services:
     build:
       context: ../apps/frontend
       dockerfile: ../../docker/frontend.Dockerfile
-    container_name: mern-frontend
+    container_name: cooking-sparkles-frontend
     ports:
       - "5173:5173"
     depends_on:
