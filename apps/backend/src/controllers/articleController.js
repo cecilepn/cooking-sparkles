@@ -65,7 +65,7 @@ export const getArticleById = catchAsync(async (req, res, next) => {
     return next(new AppError('Article not found', 404))
   }
 
-  await article.incrementerVues()
+  await article.incrementViews()
 
   res.status(200).json({
     success: true,

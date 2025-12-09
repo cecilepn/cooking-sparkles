@@ -45,8 +45,8 @@ router
 // SPECIFIC ACTIONS
 // ============================================
 
-// PATCH /api/comments/:id/approve  - Approve a comment
-router.patch('/:id/approve', approveComment)
+// PATCH /api/comments/:id/approved  - Approve a comment
+router.patch('/:id/approved', approveComment)
 
 // PATCH /api/comments/:id/report   - Report a comment
 router.patch('/:id/report', reportComment)

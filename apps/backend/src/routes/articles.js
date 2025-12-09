@@ -8,6 +8,7 @@ import {
   getPublishedArticles,
   publishArticle
 } from '../controllers/articleController.js'
+import commentRoutes from './comments.js'
 
 const router = express.Router()
 
@@ -63,5 +64,7 @@ router.patch('/:id/publier', publishArticle)
 // Pour gérer les commentaires liés à un article (à activer plus tard)
 // import commentRoutes from './comments.js';
 // router.use('/:articleId/comments', commentRoutes);
+
+router.use('/:articleId/comments', commentRoutes)
 
 export default router

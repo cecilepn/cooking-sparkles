@@ -11,8 +11,8 @@ export const createComment = catchAsync(async (req, res, next) => {
   if (!article) return next(new AppError('Article non trouvé', 404))
 
   const comment = await Comment.create({
-    contenu: req.body.contenu,
-    auteur: req.body.auteur,
+    content: req.body.content,
+    author: req.body.author,
     email: req.body.email,
     article: articleId
   })
@@ -75,7 +75,7 @@ export const getAllComments = catchAsync(async (req, res, next) => {
 export const updateComment = catchAsync(async (req, res, next) => {
   const comment = await Comment.findByIdAndUpdate(
     req.params.id,
-    { contenu: req.body.contenu },
+    { content: req.body.content },
     { new: true, runValidators: true }
   )
   if (!comment) return next(new AppError('Commentaire non trouvé', 404))
@@ -89,7 +89,7 @@ export const approveComment = catchAsync(async (req, res, next) => {
   const comment = await Comment.findById(req.params.id)
   if (!comment) return next(new AppError('Commentaire non trouvé', 404))
 
-  await comment.approuver()
+  await comment.approve()
   res
     .status(200)
     .json({ success: true, message: 'Commentaire approuvé', data: comment })

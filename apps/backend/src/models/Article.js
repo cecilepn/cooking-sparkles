@@ -87,19 +87,20 @@ articleSchema.statics.findByCategory = function (category) {
 
 // Virtuals
 articleSchema.virtual('resume').get(function () {
+  if (!this.content) return ''
   if (this.content.length <= 150) return this.content
   return this.content.substring(0, 150) + '...'
 })
 
 articleSchema.virtual('timeSpent').get(function () {
+  if (!this.content) return 0
   const words = this.content.split(' ').length
   return Math.ceil(words / 200)
 })
 
 // Hooks
-articleSchema.pre('save', function (next) {
+articleSchema.pre('save', async function () {
   console.log(`Article saved: ${this.title}`)
-  next()
 })
 
 articleSchema.post('save', function (doc) {

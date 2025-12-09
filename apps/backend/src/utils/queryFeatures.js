@@ -32,9 +32,9 @@ export default class QueryFeatures {
       const searchRegex = new RegExp(this.queryString.search, 'i')
       this.query = this.query.find({
         $or: [
-          { titre: searchRegex },
-          { contenu: searchRegex },
-          { auteur: searchRegex }
+          { title: searchRegex },
+          { content: searchRegex },
+          { author: searchRegex }
         ]
       })
     }
