@@ -5,8 +5,7 @@ import {
   updateMe,
   deleteMe
 } from '../controllers/authController.js'
-import { protect } from '../middleware/protect.js'
-import { restrictToAdmin } from '../middleware/authorization.js'
+import { protect, restrictToAdmin } from '../middleware/authorization.js'
 import User from '../models/User.js'
 
 const router = express.Router()

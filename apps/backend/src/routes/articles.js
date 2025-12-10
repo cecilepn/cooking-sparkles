@@ -9,8 +9,7 @@ import {
   publishArticle
 } from '../controllers/articleController.js'
 import commentRoutes from './comments.js'
-import { protect } from '../middleware/protect.js'
-import { restrictToAdmin } from '../middleware/authorization.js'
+import { protect, restrictToAdmin } from '../middleware/authorization.js'
 
 const router = express.Router()
 
