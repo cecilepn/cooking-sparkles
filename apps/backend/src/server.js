@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import { connectDB } from './config/database.js'
 import articleRoutes from './routes/articles.js'
 import commentStandaloneRoutes from './routes/commentsStandalone.js'
+import authRoutes from './routes/auth.js'
 import { errorHandler, notFound } from './middleware/errorHandler.js'
 
 dotenv.config()
@@ -18,9 +19,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// ----------------------
 // Root / Testing route
-// ----------------------
 app.get('/', (req, res) => {
   res.json({
     message: 'Welcome to Cooking Sparkles Database API',
@@ -43,15 +42,14 @@ app.use('/api/articles', articleRoutes)
 // Standalone comment routes
 app.use('/api/comments', commentStandaloneRoutes)
 
-// ----------------------
+// Auth routes
+app.use('/api/auth', authRoutes)
+
 // Error handling middleware
-// ----------------------
 app.use(notFound)
 app.use(errorHandler)
 
-// ----------------------
 // Start server after DB connection
-// ----------------------
 const startServer = async () => {
   try {
     await connectDB()

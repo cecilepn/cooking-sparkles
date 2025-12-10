@@ -1,3 +1,4 @@
+// src/models/Comment.js
 import mongoose from 'mongoose'
 
 const commentSchema = new mongoose.Schema(
@@ -5,6 +6,11 @@ const commentSchema = new mongoose.Schema(
     content: { type: String, required: true, trim: true },
     author: { type: String, required: true, trim: true },
     email: { type: String, trim: true, lowercase: true },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: false
+    },
     article: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Article',
@@ -20,28 +26,23 @@ const commentSchema = new mongoose.Schema(
   }
 )
 
-// ===== Hooks sur document =====
-commentSchema.pre('save', function () {
+// ===== Hooks =====
+commentSchema.pre('save', function (next) {
   console.log(`Saving comment by ${this.author}`)
+  next()
 })
 
 commentSchema.post('save', function (doc) {
   console.log(`Comment saved: ${doc._id}`)
 })
 
-commentSchema.pre('remove', function () {
-  console.log(`Removing comment: ${this._id}`)
+// pre hook for findOneAndDelete (useful if you use findByIdAndDelete)
+commentSchema.pre('findOneAndDelete', function (next) {
+  console.log(`Comment being removed by findOneAndDelete`)
+  next()
 })
 
-// ===== Auto-populate article pour les queries =====
-commentSchema.pre(/^find/, function () {
-  this.populate({
-    path: 'article',
-    select: 'title author'
-  })
-})
-
-// ===== Méthodes d'instance =====
+// ===== Instance methods =====
 commentSchema.methods.approve = function () {
   this.approved = true
   return this.save()

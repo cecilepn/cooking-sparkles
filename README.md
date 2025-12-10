@@ -4,14 +4,12 @@
 - `apps/frontend` → Frontend React (Vite)
 - `docker/` → Configuration Docker & Docker Compose
 
-Le projet peut être lancé **avec Docker** ou **sans Docker (localement)**.
+Le projet doit être lancé **avec Docker**
 
 ## Prérequis
 
-### Avec Docker (recommandé)
-
-- Docker
-- Docker Compose (inclus avec Docker Desktop)
+- Docker Desktop
+- Docker Compose
 
 Vérification :
 
@@ -20,23 +18,7 @@ docker -v
 docker compose version
 ```
 
-### Sans Docker (local)
-
-- Node.js ≥ 18
-- npm ou pnpm
-- MongoDB installé localement
-
-Vérification :
-
-```bash
-node -v
-npm -v
-mongod --version
-```
-
----
-
-## 🐳 Lancer le projet avec Docker
+## Lancer le projet
 
 Depuis le dossier `docker/` :
 
@@ -55,104 +37,6 @@ Arrêter les conteneurs :
 ```bash
 docker compose down
 ```
-
----
-
-## Logs utiles (Docker)
-
-```bash
-docker logs mern-frontend
-docker logs mern-backend
-docker logs mern-mongo
-```
-
----
-
-## Lancer le projet sans Docker (local)
-
-### Démarrer MongoDB
-
-```bash
-mongod
-```
-
----
-
-### Lancer le backend
-
-```bash
-cd apps/backend
-npm install      # ou pnpm install
-npm run dev      # ou pnpm dev
-```
-
-API accessible sur :
-
-```text
-http://localhost:5001
-```
-
----
-
-### Lancer le frontend
-
-```bash
-cd apps/frontend
-npm install      # ou pnpm install
-npm run dev      # ou pnpm dev
-```
-
-Frontend accessible sur :
-
-```
-http://localhost:5173
-```
-
----
-
-## Variables d’environnement
-
-### Backend
-
-Créer `apps/backend/.env` :
-
-```env
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/mern
-```
-
----
-
-### Frontend
-
-Créer `apps/frontend/.env` :
-
-```env
-VITE_API_URL=http://localhost:5001
-```
-
----
-
-## Notes importantes
-
-### Docker & Vite
-
-- Vite doit écouter sur `0.0.0.0` pour fonctionner dans Docker
-- Le projet est configuré avec `vite --host`
-
-### Communication Frontend → Backend
-
-- En mode **local** :
-
-  ```env
-  VITE_API_URL=http://localhost:5001
-  ```
-
-- En mode **Docker** :
-
-  ```env
-  VITE_API_URL=http://backend:5000
-  ```
 
 ## Stack technique
 

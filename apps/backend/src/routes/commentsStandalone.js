@@ -7,48 +7,30 @@ import {
   reportComment,
   deleteComment
 } from '../controllers/commentController.js'
+import { protect } from '../middleware/protect.js'
+import {
+  restrictToAdmin,
+  restrictToOwnerOrAdmin
+} from '../middleware/authorization.js'
+import Comment from '../models/Comment.js'
 
 const router = express.Router()
 
-/**
- * STANDALONE COMMENT ROUTES
- *
- * These routes allow direct access to a comment by its ID,
- * without going through the article.
- *
- * Mount in server.js with:
- * app.use('/api/comments', commentsStandaloneRouter);
- */
+// GET all comments (admin only)
+router.get('/', protect, restrictToAdmin, getAllComments)
 
-// ============================================
-// GENERAL ROUTES
-// ============================================
-
-// GET /api/comments
-// List all comments (admin)
-router.get('/', getAllComments)
-
-// ============================================
-// ROUTES BY ID
-// ============================================
-
-// GET /api/comments/:id       - Get a comment
-// PUT /api/comments/:id       - Update a comment
-// DELETE /api/comments/:id    - Delete a comment
+// CRUD by comment ID
 router
   .route('/:id')
-  .get(getCommentById)
-  .put(updateComment)
-  .delete(deleteComment)
+  .get(getCommentById) // public
+  // update: owner or admin
+  .put(protect, restrictToOwnerOrAdmin(Comment, 'id'), updateComment)
+  // delete: owner or admin
+  .delete(protect, restrictToOwnerOrAdmin(Comment, 'id'), deleteComment)
 
-// ============================================
-// SPECIFIC ACTIONS
-// ============================================
-
-// PATCH /api/comments/:id/approved  - Approve a comment
-router.patch('/:id/approved', approveComment)
-
-// PATCH /api/comments/:id/report   - Report a comment
-router.patch('/:id/report', reportComment)
+// Approve: admin only
+router.patch('/:id/approved', protect, restrictToAdmin, approveComment)
+// Report: any logged-in user can report
+router.patch('/:id/report', protect, reportComment)
 
 export default router

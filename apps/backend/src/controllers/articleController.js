@@ -122,7 +122,7 @@ export const deleteArticle = catchAsync(async (req, res, next) => {
  * @access  Public
  */
 export const getPublishedArticles = catchAsync(async (req, res, next) => {
-  const articles = await Article.findPublies()
+  const articles = await Article.findPublications()
 
   res.status(200).json({
     success: true,
