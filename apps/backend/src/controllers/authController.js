@@ -4,15 +4,31 @@ import AppError from '../utils/AppError.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
+const signToken = id =>
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' })
+
 // Signup
 export const signup = catchAsync(async (req, res, next) => {
-  const { name, email, password, role } = req.body
+  const { name, email, password } = req.body
 
-  const newUser = await User.create({ name, email, password, role })
+  if (!name || !email || !password) {
+    return next(new AppError('Tous les champs sont obligatoires', 400))
+  }
 
-  const token = newUser.createJWT()
+  const newUser = await User.create({ name, email, password })
 
-  res.status(201).json({ success: true, token, data: { user: newUser } })
+  const token = signToken(newUser._id)
+
+  res.status(201).json({
+    success: true,
+    message: 'Utilisateur créé avec succès',
+    token,
+    user: {
+      id: newUser._id,
+      name: newUser.name,
+      email: newUser.email
+    }
+  })
 })
 
 // Login
