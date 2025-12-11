@@ -12,9 +12,7 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 5001
 
-// ----------------------
 // Middlewares
-// ----------------------
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -33,9 +31,8 @@ app.get('/', (req, res) => {
   })
 })
 
-// ----------------------
 // API Routes
-// ----------------------
+
 // Article routes (includes nested comment routes)
 app.use('/api/articles', articleRoutes)
 

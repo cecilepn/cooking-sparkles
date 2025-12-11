@@ -8,7 +8,7 @@ export const createComment = catchAsync(async (req, res, next) => {
   const { articleId } = req.params
 
   const article = await Article.findById(articleId)
-  if (!article) return next(new AppError('Article non trouvé', 404))
+  if (!article) return next(new AppError('Article not found', 404))
 
   const commentData = {
     content: req.body.content,
@@ -28,7 +28,7 @@ export const createComment = catchAsync(async (req, res, next) => {
 
   res.status(201).json({
     success: true,
-    message: 'Commentaire créé avec succès',
+    message: 'Comment created',
     data: comment
   })
 })
@@ -37,7 +37,7 @@ export const createComment = catchAsync(async (req, res, next) => {
 export const getCommentsByArticle = catchAsync(async (req, res, next) => {
   const { articleId } = req.params
   const article = await Article.findById(articleId)
-  if (!article) return next(new AppError('Article non trouvé', 404))
+  if (!article) return next(new AppError('Article not found', 404))
 
   const comments = await Comment.find({ article: articleId }).sort({
     createdAt: -1
@@ -54,7 +54,7 @@ export const getCommentsByArticle = catchAsync(async (req, res, next) => {
 export const getApprovedComments = catchAsync(async (req, res, next) => {
   const { articleId } = req.params
   const article = await Article.findById(articleId)
-  if (!article) return next(new AppError('Article non trouvé', 404))
+  if (!article) return next(new AppError('Article not found', 404))
 
   const comments = await Comment.findApprovedByArticle(articleId)
   res
@@ -65,7 +65,7 @@ export const getApprovedComments = catchAsync(async (req, res, next) => {
 /* Single comment by ID */
 export const getCommentById = catchAsync(async (req, res, next) => {
   const comment = await Comment.findById(req.params.id)
-  if (!comment) return next(new AppError('Commentaire non trouvé', 404))
+  if (!comment) return next(new AppError('Commentaire not found', 404))
 
   res.status(200).json({ success: true, data: comment })
 })
@@ -85,16 +85,16 @@ export const updateComment = catchAsync(async (req, res, next) => {
     { content: req.body.content },
     { new: true, runValidators: true }
   )
-  if (!comment) return next(new AppError('Commentaire non trouvé', 404))
+  if (!comment) return next(new AppError('Comment not found', 404))
 
   res
     .status(200)
-    .json({ success: true, message: 'Commentaire mis à jour', data: comment })
+    .json({ success: true, message: 'Comment updated', data: comment })
 })
 
 export const approveComment = catchAsync(async (req, res, next) => {
   const comment = await Comment.findById(req.params.id)
-  if (!comment) return next(new AppError('Commentaire non trouvé', 404))
+  if (!comment) return next(new AppError('Comment not found', 404))
 
   await comment.approve()
   res
@@ -104,43 +104,41 @@ export const approveComment = catchAsync(async (req, res, next) => {
 
 export const reportComment = catchAsync(async (req, res, next) => {
   const comment = await Comment.findById(req.params.id)
-  if (!comment) return next(new AppError('Commentaire non trouvé', 404))
+  if (!comment) return next(new AppError('Comment not found', 404))
 
   await comment.report()
   res
     .status(200)
-    .json({ success: true, message: 'Commentaire signalé', data: comment })
+    .json({ success: true, message: 'Comment reported', data: comment })
 })
 
 /* Delete comment */
 export const deleteComment = catchAsync(async (req, res, next) => {
   const comment = await Comment.findByIdAndDelete(req.params.id)
-  if (!comment) return next(new AppError('Commentaire non trouvé', 404))
+  if (!comment) return next(new AppError('Comment not found', 404))
 
   res
     .status(200)
-    .json({ success: true, message: 'Commentaire supprimé', data: comment })
+    .json({ success: true, message: 'Comment deleted', data: comment })
 })
 
 export const deleteCommentsByArticle = catchAsync(async (req, res, next) => {
   const { articleId } = req.params
   const article = await Article.findById(articleId)
-  if (!article) return next(new AppError('Article non trouvé', 404))
+  if (!article) return next(new AppError('Article not found', 404))
 
   const result = await Comment.deleteMany({ article: articleId })
-  res
-    .status(200)
-    .json({
-      success: true,
-      message: `${result.deletedCount} commentaire(s) supprimé(s)`
-    })
+  res.status(200).json({
+    success: true,
+    message: `${result.deletedCount} comments deleted`
+  })
 })
 
 /* Comment stats */
 export const getCommentStats = catchAsync(async (req, res, next) => {
   const { articleId } = req.params
   const article = await Article.findById(articleId)
-  if (!article) return next(new AppError('Article non trouvé', 404))
+  if (!article) return next(new AppError('Article not found', 404))
 
   const total = await Comment.countByArticle(articleId)
   const approved = await Comment.countDocuments({
