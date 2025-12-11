@@ -9,8 +9,12 @@ import {
   publishArticle
 } from '../controllers/articleController.js'
 import commentRoutes from './comments.js'
-import { protect } from '../middleware/protect.js'
-import { restrictToAdmin } from '../middleware/authorization.js'
+import {
+  protect,
+  restrictToAdmin,
+  restrictToOwner
+} from '../middleware/authorization.js'
+import Article from '../models/Article.js'
 
 const router = express.Router()
 
@@ -23,8 +27,8 @@ router.get('/:id', getArticleById)
 router.post('/', protect, createArticle)
 
 // PUT, DELETE, PATCH require owner or admin
-router.put('/:id', protect, restrictToAdmin, updateArticle)
-router.delete('/:id', protect, restrictToAdmin, deleteArticle)
+router.put('/:id', protect, restrictToOwner(Article), updateArticle)
+router.delete('/:id', protect, restrictToOwner(Article), deleteArticle)
 router.patch('/:id/publish', protect, restrictToAdmin, publishArticle)
 
 // Nested comments

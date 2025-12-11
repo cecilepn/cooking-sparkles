@@ -6,24 +6,18 @@ import {
   deleteCommentsByArticle,
   getCommentStats
 } from '../controllers/commentController.js'
-import { protect } from '../middleware/protect.js'
-import { restrictToAdmin } from '../middleware/authorization.js'
+import { protect, restrictToAdmin } from '../middleware/authorization.js'
+import { antiSpamComment } from '../middleware/antiSpam.js'
 
 const router = express.Router({ mergeParams: true })
 
-// Public: list comments for article
+// Public routes
 router.get('/', getCommentsByArticle)
-
-// Get only approved comments
 router.get('/approved', getApprovedComments)
-
-// Stats for article
 router.get('/stats', getCommentStats)
 
-// Protected: create comment (must be logged in)
-router.post('/', protect, createComment)
-
-// Protected & admin-only: delete all comments for an article
+// Protected routes
+router.post('/', protect, antiSpamComment, createComment)
 router.delete('/', protect, restrictToAdmin, deleteCommentsByArticle)
 
 export default router

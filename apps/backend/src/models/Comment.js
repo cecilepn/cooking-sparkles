@@ -1,4 +1,3 @@
-// src/models/Comment.js
 import mongoose from 'mongoose'
 
 const commentSchema = new mongoose.Schema(
@@ -6,18 +5,20 @@ const commentSchema = new mongoose.Schema(
     content: { type: String, required: true, trim: true },
     author: { type: String, required: true, trim: true },
     email: { type: String, trim: true, lowercase: true },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: false
-    },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     article: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Article',
       required: true
     },
     approved: { type: Boolean, default: false },
-    reported: { type: Boolean, default: false }
+    reported: { type: Boolean, default: false },
+    reports: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    ]
   },
   {
     timestamps: true,
@@ -26,23 +27,11 @@ const commentSchema = new mongoose.Schema(
   }
 )
 
-// ===== Hooks =====
-commentSchema.pre('save', function (next) {
-  console.log(`Saving comment by ${this.author}`)
-  next()
+commentSchema.pre(/^find/, function () {
+  this.populate({ path: 'article', select: 'title author' })
 })
 
-commentSchema.post('save', function (doc) {
-  console.log(`Comment saved: ${doc._id}`)
-})
-
-// pre hook for findOneAndDelete (useful if you use findByIdAndDelete)
-commentSchema.pre('findOneAndDelete', function (next) {
-  console.log(`Comment being removed by findOneAndDelete`)
-  next()
-})
-
-// ===== Instance methods =====
+//  Instance methods
 commentSchema.methods.approve = function () {
   this.approved = true
   return this.save()
@@ -53,7 +42,7 @@ commentSchema.methods.report = function () {
   return this.save()
 }
 
-// ===== Statics =====
+// Statics
 commentSchema.statics.findApprovedByArticle = function (articleId) {
   return this.find({ article: articleId, approved: true }).sort({
     createdAt: -1
@@ -65,5 +54,4 @@ commentSchema.statics.countByArticle = function (articleId) {
 }
 
 const Comment = mongoose.model('Comment', commentSchema)
-
 export default Comment

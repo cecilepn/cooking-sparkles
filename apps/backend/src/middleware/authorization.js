@@ -1,54 +1,47 @@
-import AppError from '../utils/AppError.js'
+import jwt from 'jsonwebtoken'
+import User from '../models/User.js'
 
-/**
- * Middleware: restreint aux admins
- */
-export const restrictToAdmin = (req, res, next) => {
-  if (!req.user || req.user.role !== 'admin') {
-    return next(new AppError('Admin access required', 403))
+// Vérifie que l'utilisateur est connecté
+export const protect = async (req, res, next) => {
+  let token
+  if (req.headers.authorization?.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1]
   }
-  next()
+
+  if (!token) return res.status(401).json({ message: 'You have to be logged' })
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    req.user = await User.findById(decoded.id)
+    if (!req.user) throw new Error('User not found')
+    next()
+  } catch (err) {
+    res.status(401).json({ message: 'Invalide token' })
+  }
 }
 
-/**
- * Middleware factory: restreint au propriétaire du document (Model) ou admin
- * - Model: Mongoose model
- * - idParam (optionnel): param name containing id (default 'id')
- *
- * Fallbacks:
- * - si doc.user existe → compare ObjectId
- * - sinon si doc.email existe → compare emails
- * - sinon si doc.author existe → compare names
- */
-export const restrictToOwnerOrAdmin = (Model, idParam = 'id') => {
+// Restrict actions to the owner of a resource
+export const restrictToOwner = Model => {
   return async (req, res, next) => {
-    try {
-      const doc = await Model.findById(req.params[idParam])
-      if (!doc) return next(new AppError('Resource not found', 404))
+    const doc = await Model.findById(req.params.id)
+    if (!doc) return res.status(404).json({ message: 'Resource not found' })
 
-      // allow admin
-      if (req.user && req.user.role === 'admin') return next()
-
-      // if no user authenticated
-      if (!req.user) {
-        return next(new AppError('Authentication required', 401))
-      }
-
-      // If model stores a reference to user
-      if (doc.user) {
-        if (doc.user.toString() === req.user._id.toString()) return next()
-      } else if (doc.email && req.user.email) {
-        if (doc.email.toLowerCase() === req.user.email.toLowerCase())
-          return next()
-      } else if (doc.author && req.user.name) {
-        if (doc.author === req.user.name) return next()
-      }
-
-      return next(
-        new AppError('You are not allowed to perform this action', 403)
-      )
-    } catch (err) {
-      return next(err)
+    // If user connected not author or admin → not allowed
+    if (
+      doc.user.toString() !== req.user._id.toString() &&
+      req.user.role !== 'admin'
+    ) {
+      return res.status(403).json({ message: 'Vous n’êtes pas autorisé' })
     }
+
+    next()
   }
+}
+
+// Restrict actions to admin
+export const restrictToAdmin = (req, res, next) => {
+  if (!req.user || req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Only admin' })
+  }
+  next()
 }

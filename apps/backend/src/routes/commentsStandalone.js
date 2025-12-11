@@ -7,10 +7,10 @@ import {
   reportComment,
   deleteComment
 } from '../controllers/commentController.js'
-import { protect } from '../middleware/protect.js'
 import {
-  restrictToAdmin,
-  restrictToOwnerOrAdmin
+  protect,
+  restrictToOwner,
+  restrictToAdmin
 } from '../middleware/authorization.js'
 import Comment from '../models/Comment.js'
 
@@ -23,14 +23,11 @@ router.get('/', protect, restrictToAdmin, getAllComments)
 router
   .route('/:id')
   .get(getCommentById) // public
-  // update: owner or admin
-  .put(protect, restrictToOwnerOrAdmin(Comment, 'id'), updateComment)
-  // delete: owner or admin
-  .delete(protect, restrictToOwnerOrAdmin(Comment, 'id'), deleteComment)
+  .put(protect, restrictToOwner(Comment), updateComment)
+  .delete(protect, restrictToOwner(Comment), deleteComment)
 
-// Approve: admin only
-router.patch('/:id/approved', protect, restrictToAdmin, approveComment)
-// Report: any logged-in user can report
-router.patch('/:id/report', protect, reportComment)
+// Specific actions
+router.patch('/:id/approved', protect, restrictToAdmin, approveComment) // admin only
+router.patch('/:id/report', protect, reportComment) // any logged-in user
 
 export default router
