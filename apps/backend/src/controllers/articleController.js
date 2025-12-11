@@ -9,10 +9,18 @@ import { catchAsync } from '../middleware/errorHandler.js'
  * @access  Public
  */
 export const createArticle = catchAsync(async (req, res, next) => {
-  const { title, content, author, category } = req.body
+  const articleData = {
+    title: req.body.title,
+    content: req.body.content,
+    author: req.body.author,
+    category: req.body.category,
+    user: req.user._id
+  }
 
-  const article = new Article({ title, content, author, category })
-  const savedArticle = await article.save()
+  const article = new Article(articleData)
+  let savedArticle = await article.save()
+
+  savedArticle = await savedArticle.populate('user', 'name email role')
 
   res.status(201).json({
     success: true,
@@ -80,7 +88,7 @@ export const getArticleById = catchAsync(async (req, res, next) => {
  */
 export const updateArticle = catchAsync(async (req, res, next) => {
   const { id } = req.params
-  const article = await Article.findByIdAndUpdate(id, req.body, {
+  let article = await Article.findByIdAndUpdate(id, req.body, {
     new: true,
     runValidators: true
   })
@@ -88,6 +96,8 @@ export const updateArticle = catchAsync(async (req, res, next) => {
   if (!article) {
     return next(new AppError('Article not found', 404))
   }
+
+  article = await article.populate('user', 'name email role')
 
   res.status(200).json({
     success: true,

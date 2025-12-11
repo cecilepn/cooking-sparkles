@@ -21,6 +21,11 @@ const articleSchema = new mongoose.Schema(
       trim: true,
       maxlength: [100, "Le nom de l'auteur ne peut pas dépasser 100 caractères"]
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
     published: {
       type: Boolean,
       default: false
@@ -60,7 +65,14 @@ const articleSchema = new mongoose.Schema(
   }
 )
 
-// Méthodes
+articleSchema.pre(/^find/, function () {
+  this.populate({
+    path: 'user',
+    select: 'name email role'
+  })
+})
+
+//  Instance methods
 articleSchema.methods.publish = function () {
   this.published = true
   return this.save()

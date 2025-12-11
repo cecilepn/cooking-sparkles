@@ -24,13 +24,16 @@ export const protect = async (req, res, next) => {
 export const restrictToOwner = Model => {
   return async (req, res, next) => {
     const doc = await Model.findById(req.params.id)
-    if (!doc) return res.status(404).json({ message: 'Doc not found' })
+    if (!doc) return res.status(404).json({ message: 'Resource not found' })
+
+    // If user connected not author or admin → not allowed
     if (
-      doc.user?.toString() !== req.user._id.toString() &&
+      doc.user.toString() !== req.user._id.toString() &&
       req.user.role !== 'admin'
     ) {
-      return res.status(403).json({ message: 'Non authorized' })
+      return res.status(403).json({ message: 'Vous n’êtes pas autorisé' })
     }
+
     next()
   }
 }
