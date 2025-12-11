@@ -7,6 +7,7 @@ import {
   getCommentStats
 } from '../controllers/commentController.js'
 import { protect, restrictToAdmin } from '../middleware/authorization.js'
+import { antiSpamComment } from '../middleware/antiSpam.js'
 
 const router = express.Router({ mergeParams: true })
 
@@ -16,7 +17,7 @@ router.get('/approved', getApprovedComments)
 router.get('/stats', getCommentStats)
 
 // Protected routes
-router.post('/', protect, createComment)
+router.post('/', protect, antiSpamComment, createComment)
 router.delete('/', protect, restrictToAdmin, deleteCommentsByArticle)
 
 export default router

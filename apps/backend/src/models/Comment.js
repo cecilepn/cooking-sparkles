@@ -12,7 +12,13 @@ const commentSchema = new mongoose.Schema(
       required: true
     },
     approved: { type: Boolean, default: false },
-    reported: { type: Boolean, default: false }
+    reported: { type: Boolean, default: false },
+    reports: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    ]
   },
   {
     timestamps: true,

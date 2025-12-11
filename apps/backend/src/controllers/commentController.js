@@ -103,13 +103,26 @@ export const approveComment = catchAsync(async (req, res, next) => {
 })
 
 export const reportComment = catchAsync(async (req, res, next) => {
+  const userId = req.user._id
   const comment = await Comment.findById(req.params.id)
-  if (!comment) return next(new AppError('Comment not found', 404))
 
-  await comment.report()
-  res
-    .status(200)
-    .json({ success: true, message: 'Comment reported', data: comment })
+  if (!comment) return next(new AppError('Commentaire non trouvé', 404))
+
+  // Check if user already reported
+  if (comment.reports.includes(userId)) {
+    return next(new AppError('Vous avez déjà signalé ce commentaire', 400))
+  }
+
+  // Add his report
+  comment.reports.push(userId)
+  comment.reported = true
+  await comment.save()
+
+  res.status(200).json({
+    success: true,
+    message: 'Commentaire signalé',
+    data: comment
+  })
 })
 
 /* Delete comment */
