@@ -1,6 +1,5 @@
 import api from './api'
 
-// Signup
 export const signup = async ({ name, email, password }) => {
   const response = await api.post('/auth/signup', {
     name,
@@ -10,13 +9,27 @@ export const signup = async ({ name, email, password }) => {
   return response.data
 }
 
-// Login
 export const login = async ({ email, password }) => {
   const response = await api.post('/auth/login', { email, password })
   return response.data
 }
 
-// Logout
 export const logout = () => {
   localStorage.removeItem('token')
+}
+
+// get user account connected
+export const getMe = async () => {
+  const res = await api.get('/auth/me')
+  return res.data
+}
+
+export const updatePassword = async password => {
+  const res = await api.put('/auth/me', { password })
+  return res.data
+}
+
+export const deleteAccount = async () => {
+  const res = await api.delete('/auth/me')
+  return res.data
 }

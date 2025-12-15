@@ -30,34 +30,27 @@ export const createArticle = catchAsync(async (req, res, next) => {
 })
 
 /**
- * @desc    Get all articles
+ * @desc    Get all articles (optionally filter by category)
  * @route   GET /api/articles
  * @access  Public
  */
 export const getAllArticles = catchAsync(async (req, res, next) => {
+  const { category } = req.query
   const totalCount = await Article.countDocuments()
-  const features = new QueryFeatures(Article.find(), req.query)
-    .filter()
-    .search()
-    .sort()
-    .limitFields()
-    .paginate()
 
-  const articles = await features.query
-  const paginationInfo = features.getPaginationInfo(totalCount)
+  let query = Article.find()
+  if (category && category !== 'All') {
+    query = query.where('category').equals(category)
+  }
 
-  const response = {
+  const articles = await query.sort({ createdAt: -1 })
+
+  res.status(200).json({
     success: true,
     count: articles.length,
     totalCount,
     data: articles
-  }
-
-  if (paginationInfo) {
-    response.pagination = paginationInfo
-  }
-
-  res.status(200).json(response)
+  })
 })
 
 /**

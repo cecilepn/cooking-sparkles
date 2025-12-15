@@ -1,8 +1,12 @@
 import api from './api'
 
-export const getAllArticles = async params => {
-  const response = await api.get('/articles', { params })
-  return response.data
+export const getAllArticles = async category => {
+  const url =
+    category && category !== 'All'
+      ? `/articles?category=${category}`
+      : '/articles'
+  const res = await api.get(url)
+  return res.data
 }
 
 export const getArticleById = async id => {

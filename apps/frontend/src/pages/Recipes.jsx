@@ -6,13 +6,26 @@ export default function Recipes() {
   const [articles, setArticles] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [category, setCategory] = useState('All')
+
+  const categories = [
+    'All',
+    'Dessert',
+    'Plat',
+    'Sucré',
+    'Salé',
+    'Facile',
+    'Difficile',
+    'Autre'
+  ]
 
   useEffect(() => {
     const fetchArticles = async () => {
+      setLoading(true)
+      setError(null)
       try {
-        const res = await getAllArticles()
+        const res = await getAllArticles(category)
         setArticles(res.data)
-        console.log(res)
       } catch (err) {
         setError(err.response?.data?.message || 'Erreur serveur')
       } finally {
@@ -21,14 +34,32 @@ export default function Recipes() {
     }
 
     fetchArticles()
-  }, [])
+  }, [category])
 
   if (loading) return <p>Chargement...</p>
   if (error) return <p className="text-red-500">{error}</p>
 
   return (
     <section className="max-w-4xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Recettes</h1>
+      <h1 className="text-2xl font-bold mb-4">Recettes</h1>
+
+      <div className="mb-6">
+        <label htmlFor="category" className="mr-2 font-medium">
+          Filtrer par catégorie :
+        </label>
+        <select
+          id="category"
+          value={category}
+          onChange={e => setCategory(e.target.value)}
+          className="border rounded p-1">
+          {categories.map(cat => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <ul className="space-y-4">
         {articles.map(article => (
           <li key={article._id} className="border p-4 rounded shadow-sm">

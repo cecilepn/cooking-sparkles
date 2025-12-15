@@ -6,6 +6,8 @@ export default function Register() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState(null)
   const navigate = useNavigate()
 
@@ -13,11 +15,16 @@ export default function Register() {
     e.preventDefault()
     setError(null)
 
+    if (password !== confirmPassword) {
+      setError('Les mots de passe ne correspondent pas')
+      return
+    }
+
     try {
       const data = await signup({ name, email, password })
       localStorage.setItem('token', data.token)
       console.log('Utilisateur créé', data.user)
-      navigate('/profile') // redirection après inscription
+      navigate('/profile')
     } catch (err) {
       console.error(err.response?.data || err.message)
       setError(err.response?.data?.message || 'Erreur lors de l’inscription')
@@ -39,6 +46,7 @@ export default function Register() {
             required
           />
         </div>
+
         <div className="flex flex-col">
           <label htmlFor="email">Adresse mail</label>
           <input
@@ -49,23 +57,46 @@ export default function Register() {
             required
           />
         </div>
-        <div className="flex flex-col">
+
+        <div className="flex flex-col relative">
           <label htmlFor="password">Mot de passe</label>
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             id="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
+            autoComplete="new-password"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-2 top-8 text-sm text-gray-500">
+            {showPassword ? 'Cacher' : 'Voir'}
+          </button>
+        </div>
+
+        <div className="flex flex-col relative">
+          <label htmlFor="confirmPassword">Confirmer le mot de passe</label>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+            required
+            autoComplete="new-password"
           />
         </div>
+
         <button
           type="submit"
           className="bg-green-500 text-white px-4 py-2 rounded">
           S’inscrire
         </button>
       </form>
+
       {error && <p className="text-red-500 mt-2">{error}</p>}
+
       <Link to="/login" className="text-blue-500 mt-4">
         Déjà un compte ? Se connecter
       </Link>
