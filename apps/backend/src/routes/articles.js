@@ -6,7 +6,8 @@ import {
   updateArticle,
   deleteArticle,
   getPublishedArticles,
-  publishArticle
+  publishArticle,
+  getMyArticles
 } from '../controllers/articleController.js'
 import commentRoutes from './comments.js'
 import {
@@ -18,13 +19,14 @@ import Article from '../models/Article.js'
 
 const router = express.Router()
 
+// Protected routes
+router.get('/me', protect, getMyArticles)
+router.post('/', protect, createArticle)
+
 // Public routes
 router.get('/published', getPublishedArticles)
 router.get('/', getAllArticles)
 router.get('/:id', getArticleById)
-
-// Protected routes
-router.post('/', protect, createArticle)
 
 // PUT, DELETE, PATCH require owner or admin
 router.put('/:id', protect, restrictToOwner(Article), updateArticle)

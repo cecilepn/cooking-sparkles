@@ -162,3 +162,20 @@ export const publishArticle = catchAsync(async (req, res, next) => {
     data: article
   })
 })
+
+/**
+ * @desc    Get articles of logged-in user
+ * @route   GET /api/articles/me
+ * @access  Private
+ */
+export const getMyArticles = catchAsync(async (req, res) => {
+  const articles = await Article.find({ user: req.user._id }).sort({
+    createdAt: -1
+  })
+
+  res.status(200).json({
+    success: true,
+    count: articles.length,
+    data: articles
+  })
+})

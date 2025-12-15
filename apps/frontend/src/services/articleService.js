@@ -23,3 +23,8 @@ export const deleteArticle = async id => {
   const response = await api.delete(`/articles/${id}`)
   return response.data
 }
+
+export const getMyArticles = async () => {
+  const response = await api.get('/articles/me')
+  return response.data
+}
