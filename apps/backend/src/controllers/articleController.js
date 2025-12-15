@@ -12,9 +12,9 @@ export const createArticle = catchAsync(async (req, res, next) => {
   const articleData = {
     title: req.body.title,
     content: req.body.content,
-    author: req.body.author,
     category: req.body.category,
-    user: req.user._id
+    user: req.user._id,
+    author: req.user.name
   }
 
   const article = new Article(articleData)

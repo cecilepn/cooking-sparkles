@@ -10,8 +10,12 @@ export const getArticleById = async id => {
   return response.data
 }
 
-export const createArticle = async articleData => {
-  const response = await api.post('/articles', articleData)
+export const createArticle = async (articleData, token) => {
+  const response = await api.post('/articles', articleData, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
   return response.data
 }
 
