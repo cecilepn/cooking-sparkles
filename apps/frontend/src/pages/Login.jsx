@@ -13,7 +13,7 @@ export default function Login() {
     setError(null)
 
     try {
-      const data = await login(email, password)
+      const data = await login({ email, password })
       localStorage.setItem('token', data.token)
       console.log('Utilisateur connecté', data)
       navigate('/profile')
