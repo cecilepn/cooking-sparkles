@@ -35,7 +35,7 @@ export default function Profile() {
       </div>
 
       <Link
-        to="/recipes/new"
+        to="/add-recipe"
         className="inline-block mb-4 bg-green-500 text-white px-4 py-2 rounded">
         Ajouter une recette
       </Link>

@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { getArticleById } from '../services/articleService'
+import CommentList from '../components/comments/CommentList'
 
 export default function Recipe() {
   const { id } = useParams()
@@ -26,10 +27,11 @@ export default function Recipe() {
   if (!article) return <p>Rcette introuvable</p>
 
   return (
-    <article>
+    <div>
       <h1>{article.title}</h1>
       <p>{article.content}</p>
       <p className="text-sm text-gray-500">Par {article.author}</p>
-    </article>
+      <CommentList articleId={article._id} />
+    </div>
   )
 }
