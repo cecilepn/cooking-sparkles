@@ -3,6 +3,7 @@ import { getMyArticles } from '../services/articleService'
 import { getMe, updatePassword, deleteAccount } from '../services/authService'
 import { useAuth } from '../context/AuthContext'
 import { Link, useNavigate } from 'react-router-dom'
+import RecipeCard from '../components/recipes/RecipeCard'
 
 export default function Profile() {
   const { logout } = useAuth()
@@ -45,7 +46,7 @@ export default function Profile() {
   }
 
   const handleDeleteAccount = async () => {
-    if (!confirm('⚠️ Supprimer définitivement votre compte ?')) return
+    if (!confirm('Supprimer définitivement votre compte ?')) return
 
     try {
       await deleteAccount()
@@ -59,25 +60,13 @@ export default function Profile() {
   if (loading) return <p>Chargement…</p>
 
   return (
-    <section className="p-6 max-w-3xl mx-auto space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Mon profil</h1>
-        <button onClick={logout} className="text-red-500 underline">
-          Se déconnecter
-        </button>
-      </div>
-
-      <div className="border rounded p-4 bg-gray-50">
-        <h2 className="font-semibold mb-2">Informations</h2>
-        <p>
-          <strong>Nom :</strong> {user.name}
-        </p>
-        <p>
-          <strong>Email :</strong> {user.email}
-        </p>
-        <p>
-          <strong>Rôle :</strong> {user.role}
-        </p>
+    <section className="w-full flex flex-col gap-10 px-4 py-5 md:px-8">
+      <div className="flex items-center gap-2">
+        <img src="/profile.png" alt="" className="max-w-xxl" />
+        <div className="flex flex-col gap-2.5">
+          <p>{user.name}</p>
+          <p>{user.email}</p>
+        </div>
       </div>
 
       <form onSubmit={handlePasswordUpdate} className="border rounded p-4">
@@ -99,45 +88,22 @@ export default function Profile() {
         {message && <p className="text-sm mt-2">{message}</p>}
       </form>
 
-      <div className="border rounded p-4">
-        <h2 className="font-semibold mb-2 text-red-600">Zone dangereuse</h2>
-        <button
-          onClick={handleDeleteAccount}
-          className="bg-red-600 text-white px-4 py-2 rounded">
-          Supprimer mon compte
-        </button>
-      </div>
+      <div onClick={handleDeleteAccount}>Supprimer mon compte</div>
 
-      <div>
-        <Link
-          to="/add-recipe"
-          className="inline-block mb-4 bg-green-500 text-white px-4 py-2 rounded">
-          Ajouter une recette
-        </Link>
-
-        <h2 className="text-xl font-semibold mb-2">Mes recettes</h2>
+      <div className="flex flex-col gap-5">
+        <h2>Mes recettes</h2>
 
         {articles.length === 0 ? (
-          <p>Aucune recette pour le moment.</p>
+          <div>
+            <p>Aucune recette pour le moment.</p>
+            <Link to="/add-recipe">Ajouter une recette</Link>
+          </div>
         ) : (
-          <ul className="space-y-3">
+          <div className="flex flex-wrap gap-4 justify-center">
             {articles.map(article => (
-              <li
-                key={article._id}
-                className="border p-3 rounded flex justify-between">
-                <div>
-                  <h3 className="font-semibold">{article.title}</h3>
-                  <p className="text-sm text-gray-500">
-                    {article.published ? 'Publié' : 'Brouillon'}
-                  </p>
-                </div>
-
-                <Link to={`/recipes/${article._id}`} className="text-blue-500">
-                  Voir
-                </Link>
-              </li>
+              <RecipeCard key={article._id} article={article} />
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </section>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import RecipesList from '../components/recipes/RecipesList'
+import SearchBar from '../components/common/SearchBar'
 
 export default function Recipes() {
   const [category, setCategory] = useState('All')
@@ -16,10 +17,10 @@ export default function Recipes() {
   ]
 
   return (
-    <section className="max-w-4xl mx-auto p-4">
+    <section>
       <h1 className="text-2xl font-bold mb-4">Recettes</h1>
-
-      <div className="mb-6">
+      <SearchBar />
+      <div className="">
         <label htmlFor="category" className="mr-2 font-medium">
           Filtrer par catégorie :
         </label>
