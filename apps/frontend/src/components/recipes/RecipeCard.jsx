@@ -1,24 +1,23 @@
 import { Link } from 'react-router-dom'
 
-export default function RecipeCard() {
+export default function RecipeCard({ article }) {
   return (
     <Link
-      to="/recipes/id"
-      className="max-w-[360px] flex flex-col items-center justify-center p-3">
+      to={`/recipes/${article._id}`}
+      className="max-w-[360px] flex flex-col gap-3 p-3 border rounded hover:shadow">
       <div className="relative">
-        <img src="/card-img.png" alt="" />
-        <div className="absolute bottom-3 left-3 flex justify-between">
-          <p>category</p>
-        </div>
+        <img src="/card-img.png" alt={article.title} />
+        <span className="absolute bottom-2 left-2 bg-white px-2 py-1 text-xs rounded">
+          {article.category}
+        </span>
       </div>
-      <div className="w-full flex flex-col gap-3">
-        <p>title recipe</p>
-        <p>description recipe</p>
-        <hr />
-        <div className="flex justify-between">
-          <p>Auteur</p>
-          <p>JJ/MM/YYYY</p>
-        </div>
+
+      <h3 className="font-semibold">{article.title}</h3>
+      <p className="text-sm text-gray-600">{article.resume}</p>
+
+      <div className="flex justify-between text-xs text-gray-500">
+        <span>{article.author}</span>
+        <span>{article.views} vues</span>
       </div>
     </Link>
   )

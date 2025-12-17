@@ -1,11 +1,7 @@
-import { useEffect, useState } from 'react'
-import { getAllArticles } from '../services/articleService'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import RecipesList from '../components/recipes/RecipesList'
 
 export default function Recipes() {
-  const [articles, setArticles] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
   const [category, setCategory] = useState('All')
 
   const categories = [
@@ -18,26 +14,6 @@ export default function Recipes() {
     'Difficile',
     'Autre'
   ]
-
-  useEffect(() => {
-    const fetchArticles = async () => {
-      setLoading(true)
-      setError(null)
-      try {
-        const res = await getAllArticles(category)
-        setArticles(res.data)
-      } catch (err) {
-        setError(err.response?.data?.message || 'Erreur serveur')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchArticles()
-  }, [category])
-
-  if (loading) return <p>Chargement...</p>
-  if (error) return <p className="text-red-500">{error}</p>
 
   return (
     <section className="max-w-4xl mx-auto p-4">
@@ -59,26 +35,7 @@ export default function Recipes() {
           ))}
         </select>
       </div>
-
-      <ul className="space-y-4">
-        {articles.map(article => (
-          <li key={article._id} className="border p-4 rounded shadow-sm">
-            <Link to={`/recipes/${article._id}`}>
-              <h2 className="text-xl font-semibold">{article.title}</h2>
-
-              <p className="text-gray-600 text-sm">
-                Par {article.author} • {article.category}
-              </p>
-
-              <p className="mt-2">{article.resume}</p>
-
-              <p className="text-xs text-gray-400 mt-2">
-                {article.views} vues • {article.timeSpent} min
-              </p>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <RecipesList category={category} />
     </section>
   )
 }
