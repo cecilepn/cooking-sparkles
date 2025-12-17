@@ -4,6 +4,7 @@ import SearchBar from '../components/common/SearchBar'
 
 export default function Recipes() {
   const [category, setCategory] = useState('All')
+  const [search, setSearch] = useState('')
 
   const categories = [
     'All',
@@ -17,10 +18,10 @@ export default function Recipes() {
   ]
 
   return (
-    <section>
-      <h1 className="text-2xl font-bold mb-4">Recettes</h1>
-      <SearchBar />
-      <div className="">
+    <section className="flex flex-col gap-5 px-4 py-5 md:px-8">
+      <h1>Recettes</h1>
+      <SearchBar onSearch={setSearch} />
+      <div>
         <label htmlFor="category" className="mr-2 font-medium">
           Filtrer par catégorie :
         </label>
@@ -36,7 +37,7 @@ export default function Recipes() {
           ))}
         </select>
       </div>
-      <RecipesList category={category} />
+      <RecipesList category={category} search={search} />
     </section>
   )
 }
