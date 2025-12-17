@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { login } from '../services/authService.js'
+import { login as loginApi } from '../services/authService.js'
+import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -8,17 +9,17 @@ export default function Login() {
   const [error, setError] = useState(null)
   const navigate = useNavigate()
 
+  const { login } = useAuth()
+
   const handleSubmit = async e => {
     e.preventDefault()
     setError(null)
 
     try {
-      const data = await login({ email, password })
-      localStorage.setItem('token', data.token)
-      console.log('Utilisateur connecté', data)
+      const data = await loginApi({ email, password })
+      login(data.token)
       navigate('/profile')
     } catch (err) {
-      console.error(err.response?.data || err.message)
       setError(err.response?.data?.message || 'Erreur de connexion')
     }
   }
