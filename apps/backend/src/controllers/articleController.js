@@ -121,7 +121,7 @@ export const deleteArticle = catchAsync(async (req, res, next) => {
 
 /**
  * @desc    Get only published articles
- * @route   GET /api/articles/publies
+ * @route   GET /api/articles/published
  * @access  Public
  */
 export const getPublishedArticles = catchAsync(async (req, res, next) => {
@@ -136,7 +136,7 @@ export const getPublishedArticles = catchAsync(async (req, res, next) => {
 
 /**
  * @desc    Publish article
- * @route   PATCH /api/articles/:id/publier
+ * @route   PATCH /api/articles/:id/publish
  * @access  Public
  */
 export const publishArticle = catchAsync(async (req, res, next) => {
@@ -170,5 +170,27 @@ export const getMyArticles = catchAsync(async (req, res) => {
     success: true,
     count: articles.length,
     data: articles
+  })
+})
+
+/**
+ * @desc    Unpublish article (to draft state)
+ * @route   PATCH /api/articles/:id/unpublish
+ * @access  Private (owner ou admin)
+ */
+export const unpublishArticle = catchAsync(async (req, res, next) => {
+  const { id } = req.params
+  const article = await Article.findById(id)
+
+  if (!article) {
+    return next(new AppError('Article not found', 404))
+  }
+
+  await article.unpublish()
+
+  res.status(200).json({
+    success: true,
+    message: 'Article dépublié.',
+    data: article
   })
 })

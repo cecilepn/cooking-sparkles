@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { createArticle } from '../services/articleService'
+import { createArticle, publishArticle } from '../services/articleService'
+import Button from '../components/common/Button'
 
 export default function CreateArticle() {
   const { isAuthenticated } = useAuth()
@@ -11,6 +12,7 @@ export default function CreateArticle() {
   const [category, setCategory] = useState('Dessert')
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [action, setAction] = useState('draft')
 
   if (!isAuthenticated) {
     return <p>Vous devez être connecté pour ajouter une recette.</p>
@@ -23,22 +25,23 @@ export default function CreateArticle() {
 
     try {
       const token = localStorage.getItem('token')
-      const data = await createArticle({ title, content, category }, token)
-      console.log('Article créé', data)
-      navigate(`/recipes/${data.data._id}`)
+      const res = await createArticle({ title, content, category }, token)
+      const articleId = res.data._id
+      if (action === 'publish') await publishArticle(articleId, token)
+      navigate(`/recipes/${articleId}`)
     } catch (err) {
-      setError(err.response?.data?.message || 'Erreur lors de la création')
       console.error(err)
+      setError(err.response?.data?.message || 'Erreur lors de la création')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <section className="max-w-xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Ajouter une recette</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="flex flex-col">
+    <section className="min-h-screen flex flex-col gap-m py-8 px-7">
+      <h1>Ajouter une recette</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+        <div className="flex flex-col w-full">
           <label htmlFor="title">Titre</label>
           <input
             type="text"
@@ -49,7 +52,7 @@ export default function CreateArticle() {
             className="border p-2 rounded"
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full">
           <label htmlFor="content">Contenu</label>
           <textarea
             id="content"
@@ -60,7 +63,7 @@ export default function CreateArticle() {
             className="border p-2 rounded"
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full">
           <label htmlFor="category">Catégorie</label>
           <select
             id="category"
@@ -77,12 +80,22 @@ export default function CreateArticle() {
           </select>
         </div>
         {error && <p className="text-red-500">{error}</p>}
-        <button
-          type="submit"
-          className="bg-green-500 text-white py-2 px-4 rounded"
-          disabled={loading}>
-          {loading ? 'Création...' : 'Créer la recette'}
-        </button>
+        <div className="flex gap-3">
+          <Button
+            type="submit"
+            state={loading}
+            variant="secondary"
+            onClick={() => setAction('draft')}>
+            Sauvegarder
+          </Button>
+          <Button
+            type="submit"
+            state={loading}
+            variant="primary"
+            onClick={() => setAction('publish')}>
+            Publier
+          </Button>
+        </div>
       </form>
     </section>
   )

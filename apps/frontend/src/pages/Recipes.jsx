@@ -19,12 +19,12 @@ export default function Recipes() {
   ]
 
   return (
-    <section className="flex flex-col gap-5 px-4 py-5 md:px-xl md:py-8">
+    <section className="flex flex-col gap-5 px-6 py-5 md:px-xl md:py-8">
       <h1>Recettes</h1>
       <SearchBar onSearch={setSearch} />
-      <div className="flex">
-        <div className="relative">
-          <div className="h-fit sticky top-s min-w-[300px] pr-3">
+      <div className="flex flex-col gap-3 items-center md:flex-row md:items-start">
+        <div className="relative w-full">
+          <div className="h-fit w-full sticky top-s md:min-w-[300px] md:pr-3">
             <h2>Filtres</h2>
             <Filter
               label="Catégorie"

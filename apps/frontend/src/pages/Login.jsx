@@ -26,11 +26,12 @@ export default function Login() {
 
   return (
     <>
-      <section className="h-screen flex flex-col items-center justify-center gap-m">
+      <section className="h-screen flex flex-col items-center justify-center gap-m py-8 px-7">
+        <h1>Se connecter</h1>
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col items-center gap-sm">
-          <div className="flex flex-col">
+          className="flex flex-col items-center gap-sm w-full">
+          <div className="flex flex-col w-full">
             <label htmlFor="email">Adresse mail</label>
             <input
               type="email"
@@ -40,7 +41,7 @@ export default function Login() {
               required
             />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full">
             <label htmlFor="password">Mot de passe</label>
             <input
               type="password"
@@ -53,7 +54,9 @@ export default function Login() {
           <button type="submit">Se connecter</button>
         </form>
         {error && <p className="text-red-500 mt-2">{error}</p>}
-        <Link to="/register">Créer un compte</Link>
+        <Link to="/register" className="text-blue-500 hover:underline">
+          Créer un compte
+        </Link>
       </section>
     </>
   )

@@ -1,8 +1,8 @@
 import RecipeCard from './RecipeCard'
 import { useEffect, useState } from 'react'
-import { getAllArticles } from '../../services/articleService.js'
+import { getPublishedArticles } from '../../services/articleService.js'
 
-export default function RecipesList({ category, search }) {
+export default function RecipesList({ category = 'All', search = '' }) {
   const [articles, setArticles] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -12,7 +12,7 @@ export default function RecipesList({ category, search }) {
       setLoading(true)
       setError(null)
       try {
-        const res = await getAllArticles()
+        const res = await getPublishedArticles(category)
         setArticles(res.data)
       } catch (err) {
         setError(err.response?.data?.message || 'Erreur serveur')
@@ -22,7 +22,7 @@ export default function RecipesList({ category, search }) {
     }
 
     fetchArticles()
-  }, [])
+  }, [category])
 
   const filteredArticles = articles.filter(article => {
     const matchCategory = category === 'All' || article.category === category

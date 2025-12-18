@@ -110,15 +110,6 @@ articleSchema.virtual('timeSpent').get(function () {
   return Math.ceil(words / 200)
 })
 
-// Hooks
-articleSchema.pre('save', async function () {
-  console.log(`Article saved: ${this.title}`)
-})
-
-articleSchema.post('save', function (doc) {
-  console.log(`Article saved: ${doc._id}`)
-})
-
 const Article = mongoose.model('Article', articleSchema)
 
 export default Article

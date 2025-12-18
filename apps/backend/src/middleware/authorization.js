@@ -23,14 +23,11 @@ export const protect = async (req, res, next) => {
 // Restrict actions to the owner of a resource
 export const restrictToOwner = Model => {
   return async (req, res, next) => {
-    const doc = await Model.findById(req.params.id)
+    const doc = await Model.findById(req.params.id).select('user')
     if (!doc) return res.status(404).json({ message: 'Resource not found' })
 
-    // If user connected not author or admin → not allowed
-    if (
-      doc.user.toString() !== req.user._id.toString() &&
-      req.user.role !== 'admin'
-    ) {
+    const ownerId = doc.user.toString()
+    if (ownerId !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Vous n’êtes pas autorisé' })
     }
 
