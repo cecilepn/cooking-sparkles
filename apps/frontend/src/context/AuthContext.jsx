@@ -1,6 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react'
-import api from '../services/api' // ton instance axios
-
+import { getMe } from '../services/authService'
 const AuthContext = createContext()
 
 export function useAuth() {
@@ -23,10 +22,8 @@ export function AuthProvider({ children }) {
       }
 
       try {
-        const res = await api.get('/users/me', {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-        setUser(res.data.data)
+        const me = await getMe()
+        setUser(me.data)
         setIsAuthenticated(true)
       } catch (err) {
         console.error('Token invalide', err)

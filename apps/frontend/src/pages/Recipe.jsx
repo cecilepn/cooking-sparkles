@@ -1,11 +1,12 @@
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import {
   getArticleById,
   publishArticle,
   unpublishArticle,
-  updateArticle
+  updateArticle,
+  deleteArticle
 } from '../services/articleService'
 import CommentList from '../components/comments/CommentList'
 import Button from '../components/common/Button'
@@ -19,6 +20,7 @@ export default function Recipe() {
   const [editMode, setEditMode] = useState(false)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -37,9 +39,12 @@ export default function Recipe() {
     fetchArticle()
   }, [id])
 
+  if (!article) return
   const isOwner = isAuthenticated && user && article.user._id === user._id
+
   const canPublish = isOwner && !article.published
   const canUnpublish = isOwner && article.published
+  const canDelete = isOwner && article
 
   const handlePublish = async () => {
     setLoading(true)
@@ -79,6 +84,20 @@ export default function Recipe() {
     } catch (err) {
       console.error(err)
       setError(err.response?.data?.message || 'Erreur lors de la sauvegarde')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    setLoading(true)
+    try {
+      const token = localStorage.getItem('token')
+      await deleteArticle(article._id, token)
+      navigate('/recipes')
+    } catch (err) {
+      console.error(err)
+      setError(err.response?.data?.message || 'Erreur lors de la suppression')
     } finally {
       setLoading(false)
     }
@@ -153,6 +172,15 @@ export default function Recipe() {
                   variant="secondary"
                   onClick={handleUnpublish}>
                   Dépublier
+                </Button>
+              )}
+              {canDelete && (
+                <Button
+                  type="button"
+                  state={loading}
+                  variant="secondary"
+                  onClick={handleDelete}>
+                  Supprimer
                 </Button>
               )}
             </div>
