@@ -12,7 +12,7 @@ export default function RecipeCard({ article }) {
         </span>
       </div>
 
-      <h3 className="font-semibold">{article.title}</h3>
+      <h3 className="font-semibold truncate">{article.title}</h3>
       <p className="text-sm text-gray-600">{article.resume}</p>
 
       <div className="flex justify-between text-xs text-gray-500">

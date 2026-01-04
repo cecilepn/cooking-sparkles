@@ -45,11 +45,11 @@ export default function Recipe() {
   const canPublish = isOwner && !article.published
   const canUnpublish = isOwner && article.published
   const canDelete = isOwner && article
+  const token = localStorage.getItem('token')
 
   const handlePublish = async () => {
     setLoading(true)
     try {
-      const token = localStorage.getItem('token')
       await publishArticle(article._id, token)
       setArticle(prev => ({ ...prev, published: true }))
     } catch (err) {
@@ -63,7 +63,6 @@ export default function Recipe() {
   const handleUnpublish = async () => {
     setLoading(true)
     try {
-      const token = localStorage.getItem('token')
       await unpublishArticle(article._id, token)
       setArticle(prev => ({ ...prev, published: false }))
     } catch (err) {
@@ -77,7 +76,6 @@ export default function Recipe() {
   const handleSaveChanges = async () => {
     setLoading(true)
     try {
-      const token = localStorage.getItem('token')
       await updateArticle(article._id, { title, content }, token)
       setArticle(prev => ({ ...prev, title, content }))
       setEditMode(false)
@@ -92,7 +90,6 @@ export default function Recipe() {
   const handleDelete = async () => {
     setLoading(true)
     try {
-      const token = localStorage.getItem('token')
       await deleteArticle(article._id, token)
       navigate('/recipes')
     } catch (err) {
@@ -106,24 +103,34 @@ export default function Recipe() {
   if (loading) return <p>Chargement...</p>
   if (!article) return <p>Article introuvable</p>
 
+  const formatDate = dateString => {
+    return new Date(dateString).toLocaleDateString('fr-FR')
+  }
+
   return (
-    <div>
+    <section className="min-h-screen p-6 flex flex-col gap-10 md:p-10">
       {error && <p className="text-red-500">{error}</p>}
 
       {editMode ? (
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            className="border p-2 rounded"
-          />
-          <textarea
-            value={content}
-            onChange={e => setContent(e.target.value)}
-            rows={6}
-            className="border p-2 rounded"
-          />
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col w-full">
+            <label htmlFor="title">Titre</label>
+            <input
+              type="text"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              className="border p-2 rounded"
+            />
+          </div>
+          <div className="flex flex-col w-full">
+            <label htmlFor="title">Instructions</label>
+            <textarea
+              value={content}
+              onChange={e => setContent(e.target.value)}
+              rows={6}
+              className="border p-2 rounded"
+            />
+          </div>
           <div className="flex gap-2">
             <Button
               type="button"
@@ -142,17 +149,32 @@ export default function Recipe() {
           </div>
         </div>
       ) : (
-        <div>
-          <h1>{article.title}</h1>
-          <p>{article.content}</p>
-          <p className="text-sm text-gray-500">Par {article.author}</p>
+        <div className="flex flex-col gap-10">
+          <div className="flex flex-col gap-3">
+            <h1>{article.title}</h1>
+            <p className="text-sm text-gray-300">
+              publié le {formatDate(article.createdAt)} par {article.author}
+            </p>
+          </div>
+          <div className="flex flex-col gap-10 md:flex-row">
+            <div className="flex flex-col gap-3">
+              <h2>Les ingrédients</h2>
+              <ul className="list-disc pl-8">
+                <li>test</li>
+              </ul>
+            </div>
+            <div className="flex flex-col gap-3">
+              <h2>Les instructions</h2>
+              <p>{article.content}</p>
+            </div>
+          </div>
 
           {isOwner && (
-            <div className="flex gap-2 mt-2">
+            <div className="bg-white-100 z-10 shadow-2xl rounded-md fixed bottom-m md:right-10 flex items-center gap-4 p-4 mx-auto">
               <Button
                 type="button"
                 state={loading}
-                variant="secondary"
+                variant="primary"
                 onClick={() => setEditMode(true)}>
                 Modifier
               </Button>
@@ -175,13 +197,10 @@ export default function Recipe() {
                 </Button>
               )}
               {canDelete && (
-                <Button
-                  type="button"
-                  state={loading}
-                  variant="secondary"
-                  onClick={handleDelete}>
-                  Supprimer
-                </Button>
+                <div onClick={handleDelete} className="cursor-pointer">
+                  <img src="/trash.png" alt="" className="w-xl" />
+                  <span className="sr-only">Supprimer</span>
+                </div>
               )}
             </div>
           )}
@@ -189,6 +208,6 @@ export default function Recipe() {
       )}
 
       {article.published && <CommentList articleId={article._id} />}
-    </div>
+    </section>
   )
 }

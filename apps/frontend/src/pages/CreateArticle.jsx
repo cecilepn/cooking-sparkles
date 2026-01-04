@@ -38,7 +38,7 @@ export default function CreateArticle() {
   }
 
   return (
-    <section className="min-h-screen flex flex-col gap-m py-8 px-7">
+    <section className="min-h-screen flex flex-col gap-m p-6 md:p-10">
       <h1>Ajouter une recette</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
         <div className="flex flex-col w-full">
@@ -53,7 +53,7 @@ export default function CreateArticle() {
           />
         </div>
         <div className="flex flex-col w-full">
-          <label htmlFor="content">Contenu</label>
+          <label htmlFor="content">Instructions</label>
           <textarea
             id="content"
             value={content}

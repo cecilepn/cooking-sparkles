@@ -37,7 +37,7 @@ export default function Header() {
                 />
 
                 {open && (
-                  <div className="w-header absolute right-0 mt-2 shadow-2xl rounded-md flex flex-col gap-2 p-3 z-50 transform scale-95 opacity-0 transition-all duration-200 ease-out animate-open">
+                  <div className="bg-white-100 w-header absolute right-0 mt-2 shadow-2xl rounded-md flex flex-col gap-2 p-3 z-50 transform scale-95 opacity-0 transition-all duration-200 ease-out animate-open">
                     <Link
                       to="/profile"
                       onClick={() => setOpen(false)}

@@ -116,10 +116,28 @@ export default function Profile() {
             <Link to="/add-recipe">Ajouter une recette</Link>
           </div>
         ) : (
-          <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
-            {articles.map(article => (
-              <RecipeCard key={article._id} article={article} />
-            ))}
+          <div className="flex flex-col gap-6 md:grid md:grid-cols-3">
+            {articles.some(a => a.published) && (
+              <>
+                <h3 className="col-span-3 font-semibold">Publiées</h3>
+                {articles
+                  .filter(article => article.published)
+                  .map(article => (
+                    <RecipeCard key={article._id} article={article} />
+                  ))}
+              </>
+            )}
+
+            {articles.some(a => !a.published) && (
+              <>
+                <h3 className="col-span-3 font-semibold mt-6">Brouillons</h3>
+                {articles
+                  .filter(article => !article.published)
+                  .map(article => (
+                    <RecipeCard key={article._id} article={article} />
+                  ))}
+              </>
+            )}
           </div>
         )}
       </div>

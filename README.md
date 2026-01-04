@@ -10,6 +10,7 @@ Le projet doit être lancé **avec Docker**
 
 - Docker Desktop
 - Docker Compose
+- MongoDB Compass
 
 Vérification :
 
@@ -30,7 +31,7 @@ Accès aux services :
 
 - Frontend → [http://localhost:5173](http://localhost:5173)
 - Backend → [http://localhost:5001](http://localhost:5001)
-- MongoDB → localhost:27017
+- MongoDB → URI mongodb://localhost:27017/cooking-sparkles
 
 Arrêter les conteneurs :
 
@@ -45,3 +46,4 @@ docker compose down
 - React (Vite)
 - Node.js
 - Docker & Docker Compose
+- Tailwind.css
