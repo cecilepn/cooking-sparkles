@@ -4,9 +4,9 @@ export default function RecipeCard({ article }) {
   return (
     <Link
       to={`/recipes/${article._id}`}
-      className="max-w-[360px] flex flex-col gap-3 p-3 border rounded-2xl hover:shadow">
+      className="w-full flex flex-col gap-3 p-5 border rounded-2xl hover:shadow">
       <div className="relative">
-        <img src="/card-img.png" alt={article.title} />
+        <img src="/card-img.png" alt={article.title} className="w-full" />
         <span className="absolute bottom-2 left-2 bg-white px-2 py-1 text-xs rounded">
           {article.category}
         </span>

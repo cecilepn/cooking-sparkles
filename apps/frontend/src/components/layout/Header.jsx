@@ -11,7 +11,7 @@ export default function Header() {
   }
 
   return (
-    <header className="p-4 bg-gray-100">
+    <header className="p-6 md:px-10">
       <nav className="flex gap-4">
         <Link to="/">Accueil</Link>
         <Link to="/recipes">Recettes</Link>

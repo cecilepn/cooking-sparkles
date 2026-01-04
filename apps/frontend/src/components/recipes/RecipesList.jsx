@@ -33,10 +33,10 @@ export default function RecipesList({ category = 'All', search = '' }) {
   })
 
   if (loading) return <p>Chargement...</p>
-  if (error) return <p className="text-red-500">{error}</p>
+  if (error) return <p className="text-red-error-600">{error}</p>
 
   return (
-    <section className="flex flex-wrap gap-4">
+    <section className="flex flex-col justify-center gap-4 md:grid md:grid-cols-2">
       {filteredArticles.length === 0 ? (
         <p>Aucune recette trouvée.</p>
       ) : (

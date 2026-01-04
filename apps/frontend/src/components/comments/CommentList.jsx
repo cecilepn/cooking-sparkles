@@ -39,9 +39,7 @@ export default function CommentList({ articleId }) {
         {comments.map(comment => (
           <div key={comment._id} className="border p-3 rounded bg-gray-50">
             <p>{comment.content}</p>
-            <p className="text-xs text-gray-500 mt-1">
-              Par {comment.user?.name || 'Utilisateur supprimé'}
-            </p>
+            <p className="text-xs text-gray-500 mt-1">Par {comment.author}</p>
           </div>
         ))}
       </div>

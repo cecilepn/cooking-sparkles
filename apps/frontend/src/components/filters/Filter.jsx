@@ -1,7 +1,7 @@
 export default function filter({ label, category, categories, setCategory }) {
   return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor="category" className="mr-2 font-medium">
+    <div className="flex flex-col gap-2">
+      <label htmlFor="category" className="mt-5 font-medium">
         {label}
       </label>
       <select

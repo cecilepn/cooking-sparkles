@@ -33,11 +33,11 @@ export default function Register() {
   }
 
   return (
-    <section className="h-screen flex flex-col items-center justify-center gap-4 py-8 px-7">
+    <section className="h-screen flex flex-col items-center justify-center gap-8 p-6">
       <h1>Créer un compte</h1>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-center gap-4 w-full">
+        className="flex flex-col items-center gap-6 w-full md:max-w-1/2">
         <div className="flex flex-col w-full">
           <label htmlFor="name">Nom</label>
           <input
@@ -89,16 +89,12 @@ export default function Register() {
           />
         </div>
 
-        <button
-          type="submit"
-          className="bg-black text-white px-4 py-2 rounded w-full">
-          S’inscrire
-        </button>
+        <button type="submit">S’inscrire</button>
       </form>
 
       {error && <p className="text-red-500 mt-2">{error}</p>}
 
-      <Link to="/login" className="text-blue-500 mt-4 hover:underline">
+      <Link to="/login" className="text-green-500 hover:underline">
         Déjà un compte ? Se connecter
       </Link>
     </section>
