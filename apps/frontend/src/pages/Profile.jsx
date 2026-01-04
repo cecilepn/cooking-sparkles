@@ -99,7 +99,7 @@ export default function Profile() {
             <Link to="/add-recipe">Ajouter une recette</Link>
           </div>
         ) : (
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
             {articles.map(article => (
               <RecipeCard key={article._id} article={article} />
             ))}
