@@ -74,12 +74,12 @@
 
   h1,
   .h1 {
-    @apply text-[32px] font-bold;
+    @apply text-[32px] font-bold uppercase;
   }
 
   h2,
   .h2 {
-    @apply text-[24px] font-bold;
+    @apply text-[24px] font-bold uppercase;
   }
 
   h3,
@@ -112,4 +112,19 @@
   .link:hover {
     @apply underline transition-all duration-200 ease-in-out;
   }
+}
+
+@keyframes openMenu {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-open {
+  animation: openMenu 0.2s ease-out forwards;
 }

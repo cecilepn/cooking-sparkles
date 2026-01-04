@@ -15,13 +15,13 @@ export default function Header() {
 
   return (
     <header className="p-6 md:px-10">
-      <nav className="flex gap-2 items-center justify-around md:gap-4  md:justify-between">
+      <nav className="flex gap-2 items-center justify-around md:gap-4 md:justify-between">
         <div className="flex items-center gap-2 md:gap-4">
           <Link to="/">Accueil</Link>
           <Link to="/recipes">Recettes</Link>
         </div>
 
-        <div className="flex items-center gap-2 md:gap-4">
+        <div className="flex items-center gap-2">
           {isAuthenticated ? (
             <>
               <Link to="/add-recipe" className="w-full">
@@ -32,11 +32,12 @@ export default function Header() {
                 <img
                   src="/profile.png"
                   alt="Profil"
-                  className="h-8 w-fit cursor-pointer"
+                  className="h-full w-10 cursor-pointer"
                   onClick={() => setOpen(prev => !prev)}
                 />
+
                 {open && (
-                  <div className="w-header absolute right-0 mt-2 border shadow-md rounded-md flex flex-col gap-2 p-3 z-50">
+                  <div className="w-header absolute right-0 mt-2 shadow-2xl rounded-md flex flex-col gap-2 p-3 z-50 transform scale-95 opacity-0 transition-all duration-200 ease-out animate-open">
                     <Link
                       to="/profile"
                       onClick={() => setOpen(false)}

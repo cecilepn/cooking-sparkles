@@ -14,6 +14,7 @@ export default function Profile() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState(null)
+  const [show, setShow] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,6 +23,7 @@ export default function Profile() {
         setUser(me.data)
 
         const res = await getMyArticles()
+        console.log(res.data)
         setArticles(res.data)
       } catch (err) {
         console.error(err)
@@ -57,40 +59,55 @@ export default function Profile() {
     }
   }
 
+  const toggleParameters = () => {
+    setShow(prev => !prev)
+  }
+
   if (loading) return <p>Chargement…</p>
 
   return (
-    <section className="w-full flex flex-col gap-10 px-4 py-5 md:px-8">
-      <div className="flex items-center gap-2">
-        <img src="/profile.png" alt="" className="max-w-xxl" />
-        <div className="flex flex-col gap-2.5">
-          <p>{user.name}</p>
-          <p>{user.email}</p>
+    <section className="w-full flex flex-col gap-10 p-6 md:px-8">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <img src="/profile.png" alt="" className="max-w-xxl" />
+          <div className="flex flex-col gap-2.5">
+            <p>{user.name}</p>
+            <p>{user.email}</p>
+          </div>
+        </div>
+        <div className="cursor-pointer self-end" onClick={toggleParameters}>
+          <img src="/parameter.png" alt="" className="w-m" />
         </div>
       </div>
 
-      <form onSubmit={handlePasswordUpdate} className="border rounded p-4">
-        <h2 className="font-semibold mb-2">Modifier le mot de passe</h2>
+      <div
+        className={`flex flex-col gap-10 overflow-hidden transition-all duration-300 ease-out rounded 
+          ${show ? 'max-h-96 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+        <form
+          onSubmit={handlePasswordUpdate}
+          className="flex flex-col gap-2 p-5 border rounded-md">
+          <h2 className="font-semibold mb-2">Modifier le mot de passe</h2>
 
-        <input
-          type="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          placeholder="Nouveau mot de passe"
-          className="border p-2 w-full mb-2"
-          required
-        />
+          <input
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            placeholder="Nouveau mot de passe"
+            className="border p-2 w-full mb-2"
+            required
+          />
+          <button>Mettre à jour</button>
+          {message && <p className="text-sm mt-2">{message}</p>}
+        </form>
 
-        <button className="bg-blue-500 text-white px-4 py-2 rounded">
-          Mettre à jour
-        </button>
+        <div
+          onClick={handleDeleteAccount}
+          className="text-red-error-600 cursor-pointer self-end hover:underline">
+          Supprimer mon compte
+        </div>
+      </div>
 
-        {message && <p className="text-sm mt-2">{message}</p>}
-      </form>
-
-      <div onClick={handleDeleteAccount}>Supprimer mon compte</div>
-
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-14">
         <h2>Mes recettes</h2>
 
         {articles.length === 0 ? (
