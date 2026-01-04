@@ -6,30 +6,30 @@ import {
   updateArticle,
   deleteArticle,
   getPublishedArticles,
-  publishArticle
+  publishArticle,
+  getMyArticles,
+  unpublishArticle
 } from '../controllers/articleController.js'
 import commentRoutes from './comments.js'
-import {
-  protect,
-  restrictToAdmin,
-  restrictToOwner
-} from '../middleware/authorization.js'
+import { protect, restrictToOwner } from '../middleware/authorization.js'
 import Article from '../models/Article.js'
 
 const router = express.Router()
+
+// Protected routes
+router.get('/me', protect, getMyArticles)
+router.post('/', protect, createArticle)
+router.patch('/:id/publish', protect, publishArticle)
+router.patch('/:id/unpublish', protect, unpublishArticle)
 
 // Public routes
 router.get('/published', getPublishedArticles)
 router.get('/', getAllArticles)
 router.get('/:id', getArticleById)
 
-// Protected routes
-router.post('/', protect, createArticle)
-
 // PUT, DELETE, PATCH require owner or admin
 router.put('/:id', protect, restrictToOwner(Article), updateArticle)
 router.delete('/:id', protect, restrictToOwner(Article), deleteArticle)
-router.patch('/:id/publish', protect, restrictToAdmin, publishArticle)
 
 // Nested comments
 router.use('/:articleId/comments', commentRoutes)

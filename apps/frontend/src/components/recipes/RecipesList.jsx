@@ -1,0 +1,49 @@
+import RecipeCard from './RecipeCard'
+import { useEffect, useState } from 'react'
+import { getPublishedArticles } from '../../services/articleService.js'
+
+export default function RecipesList({ category = 'All', search = '' }) {
+  const [articles, setArticles] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const res = await getPublishedArticles(category)
+        setArticles(res.data)
+      } catch (err) {
+        setError(err.response?.data?.message || 'Erreur serveur')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchArticles()
+  }, [category])
+
+  const filteredArticles = articles.filter(article => {
+    const matchCategory = category === 'All' || article.category === category
+    const matchSearch =
+      article.title.toLowerCase().includes(search.toLowerCase()) ||
+      article.content.toLowerCase().includes(search.toLowerCase())
+    return matchCategory && matchSearch
+  })
+
+  if (loading) return <p>Chargement...</p>
+  if (error) return <p className="text-red-error-600">{error}</p>
+
+  return (
+    <section className="flex flex-col justify-center gap-4 md:grid md:grid-cols-2">
+      {filteredArticles.length === 0 ? (
+        <p>Aucune recette trouvée.</p>
+      ) : (
+        filteredArticles.map(article => (
+          <RecipeCard article={article} key={article._id} />
+        ))
+      )}
+    </section>
+  )
+}

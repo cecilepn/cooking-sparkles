@@ -12,9 +12,9 @@ export const createArticle = catchAsync(async (req, res, next) => {
   const articleData = {
     title: req.body.title,
     content: req.body.content,
-    author: req.body.author,
     category: req.body.category,
-    user: req.user._id
+    user: req.user._id,
+    author: req.user.name
   }
 
   const article = new Article(articleData)
@@ -30,34 +30,27 @@ export const createArticle = catchAsync(async (req, res, next) => {
 })
 
 /**
- * @desc    Get all articles
+ * @desc    Get all articles (optionally filter by category)
  * @route   GET /api/articles
  * @access  Public
  */
 export const getAllArticles = catchAsync(async (req, res, next) => {
+  const { category } = req.query
   const totalCount = await Article.countDocuments()
-  const features = new QueryFeatures(Article.find(), req.query)
-    .filter()
-    .search()
-    .sort()
-    .limitFields()
-    .paginate()
 
-  const articles = await features.query
-  const paginationInfo = features.getPaginationInfo(totalCount)
+  let query = Article.find()
+  if (category && category !== 'All') {
+    query = query.where('category').equals(category)
+  }
 
-  const response = {
+  const articles = await query.sort({ createdAt: -1 })
+
+  res.status(200).json({
     success: true,
     count: articles.length,
     totalCount,
     data: articles
-  }
-
-  if (paginationInfo) {
-    response.pagination = paginationInfo
-  }
-
-  res.status(200).json(response)
+  })
 })
 
 /**
@@ -128,7 +121,7 @@ export const deleteArticle = catchAsync(async (req, res, next) => {
 
 /**
  * @desc    Get only published articles
- * @route   GET /api/articles/publies
+ * @route   GET /api/articles/published
  * @access  Public
  */
 export const getPublishedArticles = catchAsync(async (req, res, next) => {
@@ -143,7 +136,7 @@ export const getPublishedArticles = catchAsync(async (req, res, next) => {
 
 /**
  * @desc    Publish article
- * @route   PATCH /api/articles/:id/publier
+ * @route   PATCH /api/articles/:id/publish
  * @access  Public
  */
 export const publishArticle = catchAsync(async (req, res, next) => {
@@ -159,6 +152,45 @@ export const publishArticle = catchAsync(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: 'Article published.',
+    data: article
+  })
+})
+
+/**
+ * @desc    Get articles of logged-in user
+ * @route   GET /api/articles/me
+ * @access  Private
+ */
+export const getMyArticles = catchAsync(async (req, res) => {
+  const articles = await Article.find({ user: req.user._id }).sort({
+    createdAt: -1
+  })
+
+  res.status(200).json({
+    success: true,
+    count: articles.length,
+    data: articles
+  })
+})
+
+/**
+ * @desc    Unpublish article (to draft state)
+ * @route   PATCH /api/articles/:id/unpublish
+ * @access  Private (owner ou admin)
+ */
+export const unpublishArticle = catchAsync(async (req, res, next) => {
+  const { id } = req.params
+  const article = await Article.findById(id)
+
+  if (!article) {
+    return next(new AppError('Article not found', 404))
+  }
+
+  await article.unpublish()
+
+  res.status(200).json({
+    success: true,
+    message: 'Article dépublié.',
     data: article
   })
 })
