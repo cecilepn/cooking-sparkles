@@ -15,13 +15,13 @@ export default function Header() {
 
   return (
     <header className="p-6 md:px-10">
-      <nav className="flex gap-2 items-center justify-around md:gap-4 md:justify-between">
+      <nav className="flex gap-2 items-center md:gap-4 md:justify-between">
         <div className="flex items-center gap-2 md:gap-4">
           <Link to="/">Accueil</Link>
           <Link to="/recipes">Recettes</Link>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-between w-full md:w-fit">
           {isAuthenticated ? (
             <>
               <Link to="/add-recipe" className="w-full">

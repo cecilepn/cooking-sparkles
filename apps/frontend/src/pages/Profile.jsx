@@ -77,7 +77,7 @@ export default function Profile() {
           className="cursor-pointer self-end flex items-center gap-s link"
           onClick={toggleParameters}>
           <img src="/stylo.png" alt="" className="w-sm" />
-          <p> Modifier le profil</p>
+          <p className="hidden md:block"> Modifier le profil</p>
         </div>
       </div>
 
