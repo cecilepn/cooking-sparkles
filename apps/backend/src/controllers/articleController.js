@@ -1,0 +1,196 @@
+import Article from '../models/Article.js'
+import AppError from '../utils/AppError.js'
+import { catchAsync } from '../middleware/errorHandler.js'
+
+/**
+ * @desc    Create a new article
+ * @route   POST /api/articles
+ * @access  Public
+ */
+export const createArticle = catchAsync(async (req, res, next) => {
+  const articleData = {
+    title: req.body.title,
+    content: req.body.content,
+    ingredients: req.body.ingredients,
+    category: req.body.category,
+    user: req.user._id,
+    author: req.user.name
+  }
+
+  const article = new Article(articleData)
+  let savedArticle = await article.save()
+
+  savedArticle = await savedArticle.populate('user', 'name email role')
+
+  res.status(201).json({
+    success: true,
+    message: 'Article créé.',
+    data: savedArticle
+  })
+})
+
+/**
+ * @desc    Get all articles (optionally filter by category)
+ * @route   GET /api/articles
+ * @access  Public
+ */
+export const getAllArticles = catchAsync(async (req, res, next) => {
+  const { category } = req.query
+  const totalCount = await Article.countDocuments()
+
+  let query = Article.find()
+  if (category && category !== 'All') {
+    query = query.where('category').equals(category)
+  }
+
+  const articles = await query.sort({ createdAt: -1 })
+
+  res.status(200).json({
+    success: true,
+    count: articles.length,
+    totalCount,
+    data: articles
+  })
+})
+
+/**
+ * @desc    Get article by ID
+ * @route   GET /api/articles/:id
+ * @access  Public
+ */
+export const getArticleById = catchAsync(async (req, res, next) => {
+  const { id } = req.params
+  const article = await Article.findById(id)
+
+  if (!article) {
+    return next(new AppError('Article not found', 404))
+  }
+
+  await article.incrementViews()
+
+  res.status(200).json({
+    success: true,
+    data: article
+  })
+})
+
+/**
+ * @desc   Update an article
+ * @route   PUT /api/articles/:id
+ * @access  Public
+ */
+export const updateArticle = catchAsync(async (req, res, next) => {
+  const { id } = req.params
+  let article = await Article.findByIdAndUpdate(id, req.body, {
+    new: true,
+    runValidators: true
+  })
+
+  if (!article) {
+    return next(new AppError('Article not found', 404))
+  }
+
+  article = await article.populate('user', 'name email role')
+
+  res.status(200).json({
+    success: true,
+    message: 'Article modifié.',
+    data: article
+  })
+})
+
+/**
+ * @desc    Delete article
+ * @route   DELETE /api/articles/:id
+ * @access  Public
+ */
+export const deleteArticle = catchAsync(async (req, res, next) => {
+  const { id } = req.params
+  const article = await Article.findByIdAndDelete(id)
+
+  if (!article) {
+    return next(new AppError('Article not found', 404))
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Article supprimé.',
+    data: article
+  })
+})
+
+/**
+ * @desc    Get only published articles
+ * @route   GET /api/articles/published
+ * @access  Public
+ */
+export const getPublishedArticles = catchAsync(async (req, res, next) => {
+  const articles = await Article.findPublications()
+
+  res.status(200).json({
+    success: true,
+    count: articles.length,
+    data: articles
+  })
+})
+
+/**
+ * @desc    Publish article
+ * @route   PATCH /api/articles/:id/publish
+ * @access  Public
+ */
+export const publishArticle = catchAsync(async (req, res, next) => {
+  const { id } = req.params
+  const article = await Article.findById(id)
+
+  if (!article) {
+    return next(new AppError('Article not found', 404))
+  }
+
+  await article.publish()
+
+  res.status(200).json({
+    success: true,
+    message: 'Article publié',
+    data: article
+  })
+})
+
+/**
+ * @desc    Get articles of logged-in user
+ * @route   GET /api/articles/me
+ * @access  Private
+ */
+export const getMyArticles = catchAsync(async (req, res) => {
+  const articles = await Article.find({ user: req.user._id }).sort({
+    createdAt: -1
+  })
+
+  res.status(200).json({
+    success: true,
+    count: articles.length,
+    data: articles
+  })
+})
+
+/**
+ * @desc    Unpublish article (to draft state)
+ * @route   PATCH /api/articles/:id/unpublish
+ * @access  Private (owner ou admin)
+ */
+export const unpublishArticle = catchAsync(async (req, res, next) => {
+  const { id } = req.params
+  const article = await Article.findById(id)
+
+  if (!article) {
+    return next(new AppError('Article not found', 404))
+  }
+
+  await article.unpublish()
+
+  res.status(200).json({
+    success: true,
+    message: 'Article dépublié.',
+    data: article
+  })
+})
