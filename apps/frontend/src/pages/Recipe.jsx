@@ -239,7 +239,7 @@ export default function Recipe() {
                   ))}
               </ul>
             </div>
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-5 max-w-[900px]">
               <h2>Les instructions</h2>
               <p>{article.content}</p>
             </div>
