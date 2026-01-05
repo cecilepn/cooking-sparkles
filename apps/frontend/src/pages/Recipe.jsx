@@ -47,11 +47,11 @@ export default function Recipe() {
   const canPublish = isOwner && !article.published
   const canUnpublish = isOwner && article.published
   const canDelete = isOwner && article
-  const token = localStorage.getItem('token')
 
   const handlePublish = async () => {
     setLoading(true)
     try {
+      const token = localStorage.getItem('token')
       await publishArticle(article._id, token)
       setArticle(prev => ({ ...prev, published: true }))
     } catch (err) {
@@ -65,6 +65,7 @@ export default function Recipe() {
   const handleUnpublish = async () => {
     setLoading(true)
     try {
+      const token = localStorage.getItem('token')
       await unpublishArticle(article._id, token)
       setArticle(prev => ({ ...prev, published: false }))
     } catch (err) {
@@ -78,6 +79,7 @@ export default function Recipe() {
   const handleSaveChanges = async () => {
     setLoading(true)
     try {
+      const token = localStorage.getItem('token')
       await updateArticle(article._id, { title, content, ingredients }, token)
       setArticle(prev => ({ ...prev, title, content, ingredients }))
       setEditMode(false)
@@ -92,6 +94,7 @@ export default function Recipe() {
   const handleDelete = async () => {
     setLoading(true)
     try {
+      const token = localStorage.getItem('token')
       await deleteArticle(article._id, token)
       navigate('/recipes')
     } catch (err) {

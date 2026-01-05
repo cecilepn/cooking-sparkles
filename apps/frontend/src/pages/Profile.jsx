@@ -21,9 +21,7 @@ export default function Profile() {
       try {
         const me = await getMe()
         setUser(me.data)
-
         const res = await getMyArticles()
-        console.log(res.data)
         setArticles(res.data)
       } catch (err) {
         console.error(err)
@@ -40,7 +38,7 @@ export default function Profile() {
     try {
       await updatePassword(password)
       setPassword('')
-      setMessage('Mot de passe mis à jour ✅')
+      setMessage('Mot de passe mis à jour')
     } catch (err) {
       console.error(err)
       setMessage('Erreur lors de la mise à jour')
@@ -75,8 +73,11 @@ export default function Profile() {
             <p>{user.email}</p>
           </div>
         </div>
-        <div className="cursor-pointer self-end" onClick={toggleParameters}>
-          <img src="/stylo.png" alt="" className="w-sm md:w-m" />
+        <div
+          className="cursor-pointer self-end flex items-center gap-s link"
+          onClick={toggleParameters}>
+          <img src="/stylo.png" alt="" className="w-sm" />
+          <p> Modifier le profil</p>
         </div>
       </div>
 
