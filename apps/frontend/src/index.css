@@ -74,17 +74,17 @@
 
   h1,
   .h1 {
-    @apply text-[32px] font-bold uppercase;
+    @apply text-[32px] leading-8  font-bold uppercase;
   }
 
   h2,
   .h2 {
-    @apply text-[24px] font-bold uppercase;
+    @apply text-[24px] leading-6 font-bold uppercase;
   }
 
   h3,
   .h3 {
-    @apply text-[20px] font-bold;
+    @apply text-[20px] leading-5 font-bold;
   }
 
   a {
@@ -101,12 +101,21 @@
     @apply pb-2;
   }
 
-  button {
+  button,
+  .primary {
     @apply text-white bg-green-700 cursor-pointer px-sm py-s rounded-md w-full transition-colors duration-300 ease-in-out;
   }
 
-  button:hover {
+  button:hover,
+  .primary:hover {
     @apply text-green-700 bg-white border border-green-700;
+  }
+
+  .secondary {
+    @apply text-green-700 bg-white border border-green-700;
+  }
+  .secondary:hover {
+    @apply text-white bg-green-700;
   }
 
   .link:hover {

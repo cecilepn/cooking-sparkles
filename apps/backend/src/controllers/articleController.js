@@ -1,5 +1,4 @@
 import Article from '../models/Article.js'
-import QueryFeatures from '../utils/queryFeatures.js'
 import AppError from '../utils/AppError.js'
 import { catchAsync } from '../middleware/errorHandler.js'
 
@@ -12,6 +11,7 @@ export const createArticle = catchAsync(async (req, res, next) => {
   const articleData = {
     title: req.body.title,
     content: req.body.content,
+    ingredients: req.body.ingredients,
     category: req.body.category,
     user: req.user._id,
     author: req.user.name
@@ -24,7 +24,7 @@ export const createArticle = catchAsync(async (req, res, next) => {
 
   res.status(201).json({
     success: true,
-    message: 'Article created.',
+    message: 'Article créé.',
     data: savedArticle
   })
 })
@@ -94,7 +94,7 @@ export const updateArticle = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: 'Article updated.',
+    message: 'Article modifié.',
     data: article
   })
 })
@@ -114,7 +114,7 @@ export const deleteArticle = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: 'Article deleted.',
+    message: 'Article supprimé.',
     data: article
   })
 })
@@ -151,7 +151,7 @@ export const publishArticle = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: 'Article published.',
+    message: 'Article publié',
     data: article
   })
 })

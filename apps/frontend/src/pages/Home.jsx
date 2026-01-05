@@ -38,7 +38,7 @@ export default function Home() {
         {articles.length === 0 ? (
           <p className="flex flex-col gap-2">
             Aucune publication n'a été trouvée. En suggérer une ?
-            <Link to="/login" className="link">
+            <Link to="/login" className="underline">
               Connectez-vous !
             </Link>
           </p>

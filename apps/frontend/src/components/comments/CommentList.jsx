@@ -26,7 +26,7 @@ export default function CommentList({ articleId }) {
   return (
     <div className="mt-6">
       <h2 className="text-lg font-semibold mb-4">
-        Commentaires ({comments.length})
+        {comments.length} Commentaires
       </h2>
 
       {comments.length === 0 && (
