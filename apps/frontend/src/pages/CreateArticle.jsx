@@ -18,7 +18,11 @@ export default function CreateArticle() {
   const [action, setAction] = useState('draft')
 
   if (!isAuthenticated) {
-    return <p>Vous devez être connecté pour ajouter une recette.</p>
+    return (
+      <p className="p-6 md:p-10">
+        Vous devez être connecté pour ajouter une recette.
+      </p>
+    )
   }
 
   const handleSubmit = async e => {
