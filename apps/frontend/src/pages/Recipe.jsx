@@ -19,6 +19,7 @@ export default function Recipe() {
   const [error, setError] = useState(null)
   const [editMode, setEditMode] = useState(false)
   const [title, setTitle] = useState('')
+  const [ingredients, setIngredients] = useState([])
   const [content, setContent] = useState('')
   const navigate = useNavigate()
 
@@ -28,6 +29,7 @@ export default function Recipe() {
         const { data } = await getArticleById(id)
         setArticle(data)
         setTitle(data.title)
+        setIngredients(data.ingredients)
         setContent(data.content)
       } catch (err) {
         console.error(err)
@@ -76,8 +78,8 @@ export default function Recipe() {
   const handleSaveChanges = async () => {
     setLoading(true)
     try {
-      await updateArticle(article._id, { title, content }, token)
-      setArticle(prev => ({ ...prev, title, content }))
+      await updateArticle(article._id, { title, content, ingredients }, token)
+      setArticle(prev => ({ ...prev, title, content, ingredients }))
       setEditMode(false)
     } catch (err) {
       console.error(err)
@@ -98,6 +100,20 @@ export default function Recipe() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleIngredientChange = (index, field, value) => {
+    setIngredients(prev =>
+      prev.map((ing, i) => (i === index ? { ...ing, [field]: value } : ing))
+    )
+  }
+
+  const addIngredient = () => {
+    setIngredients(prev => [...prev, { name: '', quantity: '', unit: '' }])
+  }
+
+  const removeIngredient = index => {
+    setIngredients(prev => prev.filter((_, i) => i !== index))
   }
 
   if (loading) return <p>Chargement...</p>
@@ -121,6 +137,56 @@ export default function Recipe() {
               onChange={e => setTitle(e.target.value)}
               className="border p-2 rounded"
             />
+          </div>
+          <div className="flex flex-col gap-3">
+            <label>Ingrédients</label>
+
+            {ingredients &&
+              ingredients.map((ing, index) => (
+                <div key={index} className="flex gap-2 items-center">
+                  <input
+                    type="number"
+                    placeholder="Qté"
+                    value={ing.quantity || ''}
+                    onChange={e =>
+                      handleIngredientChange(index, 'quantity', e.target.value)
+                    }
+                    className="border p-2 rounded w-20"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Unité"
+                    value={ing.unit || ''}
+                    onChange={e =>
+                      handleIngredientChange(index, 'unit', e.target.value)
+                    }
+                    className="border p-2 rounded w-20"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Ingrédient"
+                    value={ing.name}
+                    onChange={e =>
+                      handleIngredientChange(index, 'name', e.target.value)
+                    }
+                    className="border p-2 rounded flex-1"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeIngredient(index)}
+                    className="text-red-500">
+                    ✕
+                  </button>
+                </div>
+              ))}
+
+            <button
+              type="button"
+              onClick={addIngredient}
+              className="self-start text-sm underline">
+              + Ajouter un ingrédient
+            </button>
           </div>
           <div className="flex flex-col w-full">
             <label htmlFor="title">Instructions</label>
@@ -150,20 +216,27 @@ export default function Recipe() {
         </div>
       ) : (
         <div className="flex flex-col gap-10">
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-5">
             <h1>{article.title}</h1>
             <p className="text-sm text-gray-300">
               publié le {formatDate(article.createdAt)} par {article.author}
             </p>
           </div>
           <div className="flex flex-col gap-10 md:flex-row">
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-5">
               <h2>Les ingrédients</h2>
-              <ul className="list-disc pl-8">
-                <li>test</li>
+              <ul>
+                {article.ingredients &&
+                  article.ingredients.map((ing, index) => (
+                    <li key={index}>
+                      {ing.quantity && `${ing.quantity} `}
+                      {ing.unit && `${ing.unit} `}
+                      {ing.name}
+                    </li>
+                  ))}
               </ul>
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-5">
               <h2>Les instructions</h2>
               <p>{article.content}</p>
             </div>

@@ -19,7 +19,7 @@ export default function Recipes() {
   ]
 
   return (
-    <section className="flex flex-col gap-8 p-6 md:p-10">
+    <section className="min-h-screen flex flex-col gap-8 p-6 md:p-10">
       <h1>Recettes</h1>
       <SearchBar onSearch={setSearch} />
       <div className="flex flex-col gap-6 items-center md:flex-row md:items-start">

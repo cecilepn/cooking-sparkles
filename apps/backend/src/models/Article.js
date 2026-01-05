@@ -21,6 +21,24 @@ const articleSchema = new mongoose.Schema(
       trim: true,
       maxlength: [100, "Le nom de l'auteur ne peut pas dépasser 100 caractères"]
     },
+    ingredients: [
+      {
+        name: {
+          type: String,
+          required: [true, "Le nom de l'ingrédient est obligatoire"],
+          trim: true
+        },
+        quantity: {
+          type: Number,
+          min: [0, 'La quantité doit être positive']
+        },
+        unit: {
+          type: String,
+          trim: true,
+          maxlength: [20, "L'unité est trop longue"]
+        }
+      }
+    ],
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

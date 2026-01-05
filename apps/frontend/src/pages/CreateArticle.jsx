@@ -9,6 +9,9 @@ export default function CreateArticle() {
   const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [ingredients, setIngredients] = useState([
+    { name: '', quantity: '', unit: '' }
+  ])
   const [category, setCategory] = useState('Dessert')
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -25,7 +28,10 @@ export default function CreateArticle() {
 
     try {
       const token = localStorage.getItem('token')
-      const res = await createArticle({ title, content, category }, token)
+      const res = await createArticle(
+        { title, content, category, ingredients },
+        token
+      )
       const articleId = res.data._id
       if (action === 'publish') await publishArticle(articleId, token)
       navigate(`/recipes/${articleId}`)
@@ -35,6 +41,20 @@ export default function CreateArticle() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleIngredientChange = (index, field, value) => {
+    setIngredients(prev =>
+      prev.map((ing, i) => (i === index ? { ...ing, [field]: value } : ing))
+    )
+  }
+
+  const addIngredient = () => {
+    setIngredients(prev => [...prev, { name: '', quantity: '', unit: '' }])
+  }
+
+  const removeIngredient = index => {
+    setIngredients(prev => prev.filter((_, i) => i !== index))
   }
 
   return (
@@ -51,6 +71,57 @@ export default function CreateArticle() {
             required
             className="border p-2 rounded"
           />
+        </div>
+        <div className="flex flex-col gap-3">
+          <label>Ingrédients</label>
+
+          {ingredients.map((ing, index) => (
+            <div key={index} className="flex gap-2 items-center">
+              <input
+                type="number"
+                placeholder="Qté"
+                value={ing.quantity}
+                onChange={e =>
+                  handleIngredientChange(index, 'quantity', e.target.value)
+                }
+                className="border p-2 rounded w-20"
+              />
+              <input
+                type="text"
+                placeholder="Unité"
+                value={ing.unit}
+                onChange={e =>
+                  handleIngredientChange(index, 'unit', e.target.value)
+                }
+                className="border p-2 rounded w-20"
+              />
+              <input
+                type="text"
+                placeholder="Ingrédient"
+                value={ing.name}
+                onChange={e =>
+                  handleIngredientChange(index, 'name', e.target.value)
+                }
+                required
+                className="border p-2 rounded flex-1"
+              />
+              {ingredients.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeIngredient(index)}
+                  className="border w-fit bg-white text-black py-2 px-4">
+                  ✕
+                </button>
+              )}
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={addIngredient}
+            className="self-start text-sm underline">
+            + Ajouter un ingrédient
+          </button>
         </div>
         <div className="flex flex-col w-full">
           <label htmlFor="content">Instructions</label>

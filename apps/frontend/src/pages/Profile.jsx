@@ -66,7 +66,7 @@ export default function Profile() {
   if (loading) return <p>Chargement…</p>
 
   return (
-    <section className="w-full flex flex-col gap-10 p-6 md:px-8">
+    <section className="min-h-screen w-full flex flex-col gap-10 p-6 md:px-8">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <img src="/profile.png" alt="" className="max-w-xxl" />
@@ -76,7 +76,7 @@ export default function Profile() {
           </div>
         </div>
         <div className="cursor-pointer self-end" onClick={toggleParameters}>
-          <img src="/parameter.png" alt="" className="w-m" />
+          <img src="/stylo.png" alt="" className="w-sm md:w-m" />
         </div>
       </div>
 
@@ -111,9 +111,11 @@ export default function Profile() {
         <h2>Mes recettes</h2>
 
         {articles.length === 0 ? (
-          <div>
+          <div className="flex flex-col gap-4">
             <p>Aucune recette pour le moment.</p>
-            <Link to="/add-recipe">Ajouter une recette</Link>
+            <Link to="/add-recipe" className="link">
+              Publier une recette ?
+            </Link>
           </div>
         ) : (
           <div className="flex flex-col gap-6 md:grid md:grid-cols-3">
