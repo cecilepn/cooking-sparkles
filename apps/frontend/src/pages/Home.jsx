@@ -35,6 +35,7 @@ export default function Home() {
   return (
     <>
       <section className="min-h-screen flex flex-col gap-5 p-6 md:p-10">
+        <h1>Les meilleures recettes</h1>
         {articles.length === 0 ? (
           <p className="flex flex-col gap-2">
             Aucune publication n'a été trouvée. En suggérer une ?

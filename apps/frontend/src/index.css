@@ -69,7 +69,7 @@
 
 @layer base {
   body {
-    @apply relative bg-white-100 isolate font-helvetica text-base leading-[20px] tracking-widest antialiased;
+    @apply relative bg-white-100 isolate font-helvetica text-xs  md:text-base md:leading-[20px] tracking-widest antialiased;
   }
 
   h1,
