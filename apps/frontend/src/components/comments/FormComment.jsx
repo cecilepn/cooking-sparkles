@@ -26,7 +26,7 @@ export default function FormComment({ articleId, onCommentAdded }) {
     try {
       await createComment(articleId, content)
       setContent('')
-      onCommentAdded() // recharge la liste
+      onCommentAdded() // reload the list
     } catch (err) {
       console.error(err)
       setError('Impossible d’ajouter le commentaire')
