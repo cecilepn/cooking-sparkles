@@ -175,7 +175,7 @@ export default function Recipe() {
                   <button
                     type="button"
                     onClick={() => removeIngredient(index)}
-                    className="text-red-500">
+                    className="border w-fit bg-white text-black py-2 px-4">
                     ✕
                   </button>
                 </div>
