@@ -53,14 +53,14 @@ docker compose down
 - Docker & Docker Compose
 - Tailwind.css
 
-## Cas possible d'erreurs :
+## Si les erreurs suivantes apparaissent, voici ce qu'il faut vérifier / corriger :
 
 - S'assurer d'avoir les fichiers .env dans les dossiers suivants : docker/, apps/backend/, apps/frontend/
 
-- SI le FRONTEND rencontre l'erreur suivante : "cannot replace to directory /var/lib/docker/overlay2...."
+- Si le FRONTEND rencontre l'erreur suivante : "cannot replace to directory /var/lib/docker/overlay2...."
   => S'assurer de bien supprimer les apps/frontend/node_modules
 
-- SI au moment du docker build, l'erreur suivante :
+- Si au moment du docker build, l'erreur suivante :
 
 ```bash
 [dotenv@17.2.3] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
