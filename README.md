@@ -1,3 +1,7 @@
+# A PROPOS
+
+Cooking sparkles est un blog de recettes de cuisine. Il s'agit d'un projet étudiant dans le cadre du module FRAMEWORK JS encadré par M.ADDI Mostapha-Bachir à l'ECV de PARIS.
+
 # Projet full-stack MERN structuré en **monorepo** avec :
 
 - `apps/backend` → API Node.js / Express
@@ -8,6 +12,7 @@ Le projet doit être lancé **avec Docker**
 
 ## Prérequis
 
+- Cloner le repo : https://github.com/cecilepn/cooking-sparkles.git
 - Docker Desktop : https://docs.docker.com/desktop/setup/install/mac-install/
 - Docker Compose : https://docs.docker.com/compose/install
 - MongoDB Compass : https://www.mongodb.com/try/download/compass
